@@ -6,6 +6,6 @@ public class FormatoIndevidoException extends RuntimeException{
     }
 
     public FormatoIndevidoException(){
-        super("Formato isnerido não suportado!");
+        super("Formato inserido não suportado!");
     }
 }
