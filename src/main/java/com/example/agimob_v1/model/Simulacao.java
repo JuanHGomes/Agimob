@@ -1,49 +1,51 @@
 package com.example.agimob_v1.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class Simulacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id_simulacao")
+    private Long idSimulacao;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "data")
+    @CreationTimestamp
     private LocalDateTime data;
-    @Column(nullable = false)
-    private double valor_total;
-    @Column(nullable = false)
-    private double valor_entrada;
+
+    @Column(nullable = false, name = "valor_total")
+    private Double valor_total;
+
+    @Column(nullable = false, name = "valor_entrada")
+    private Double valor_entrada;
+
+    @Column(nullable = false, name = "prazo")
+    private Integer prazo;
+
+    @Column(nullable = false, name = "renda_usuario")
+    private Double renda_usuario;
+
+    @Column(name = "renda_participante")
+    private Double renda_participante;
+
+    @Column(name = "tipo_modalidade")
+    private String tipo_modalidade;
 
 
-
-    @Column(nullable = false)
-    private int prazo;
-    private double renda_usuario;
-    private double renda_participante;
+    @Column(name = "taxa")
+    private Taxa taxa;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "Id_usuario")
     private Usuario usuario;
-
-
-    public Simulacao() {
-    }
-
-    public Simulacao(Usuario usuario, double valor_total, double valor_entrada, int prazo) {
-        this.data = LocalDateTime.now();
-        this.valor_total = valor_total;
-        this.valor_entrada = valor_entrada;
-        this.prazo = prazo;
-        this.usuario = usuario;
-    }
-
 
 }

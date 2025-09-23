@@ -1,19 +1,16 @@
 package com.example.agimob_v1.dto;
 
-import com.example.agimob_v1.dto.ParcelaDto;
-import com.example.agimob_v1.dto.SimulacaoAgibankResponse;
-
 import java.util.List;
 
-public class SimulacaoResponse {
+public class SimulacaoResponseDTO {
     private List<ParcelaDto> parcelasSac;
     private List<ParcelaDto> parcelasPrice;
     private SimulacaoAgibankResponse simulacaoAgibank;
 
-    public SimulacaoResponse() {
+    public SimulacaoResponseDTO() {
     }
 
-    public SimulacaoResponse(List<ParcelaDto> parcelasSac, List<ParcelaDto> parcelasPrice, SimulacaoAgibankResponse simulacaoAgibank) {
+    public SimulacaoResponseDTO(List<ParcelaDto> parcelasSac, List<ParcelaDto> parcelasPrice, SimulacaoAgibankResponse simulacaoAgibank) {
         this.parcelasSac = parcelasSac;
         this.parcelasPrice = parcelasPrice;
         this.simulacaoAgibank = simulacaoAgibank;

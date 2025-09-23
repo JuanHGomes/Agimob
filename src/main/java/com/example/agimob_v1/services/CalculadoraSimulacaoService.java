@@ -2,7 +2,6 @@ package com.example.agimob_v1.services;
 
 import com.example.agimob_v1.dto.ParcelaDto;
 import com.example.agimob_v1.dto.SimulacaoAgibankResponse;
-import com.example.agimob_v1.dto.SimulacaoRequest;
 import com.example.agimob_v1.model.Simulacao;
 import org.springframework.stereotype.Service;
 

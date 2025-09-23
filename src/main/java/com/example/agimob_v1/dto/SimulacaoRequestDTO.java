@@ -1,14 +1,13 @@
 package com.example.agimob_v1.dto;
 
+//DTO DE ENTRADA!
 
-import com.example.agimob_v1.model.Usuario;
-
-import java.time.LocalDateTime;
-
-public class SimulacaoRequest {
-    private double valorFinanciamento;
-    private double valorEntrada;
-    private int prazo;
+public class SimulacaoRequestDTO {
+    private Double valorFinanciamento;
+    private Double valorEntrada;
+    private Integer prazo;
+    private Double renda_usuario;
+    private Double renda_participante;
     private String email_usuario;
 
     public double getValorFinanciamento() {
