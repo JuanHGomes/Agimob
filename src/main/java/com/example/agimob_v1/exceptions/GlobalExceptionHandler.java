@@ -17,9 +17,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         Map<String, Object> body = new HashMap<>();
 
-        body.put("timestam", LocalDateTime.now());
+        body.put("timespam", LocalDateTime.now());
         body.put("status", HttpStatus.NOT_ACCEPTABLE);
         body.put("erro", "Valor inserido inválido!");
+        body.put("message", exception.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(ValorMenorIgualZeroException.class)
+    private ResponseEntity<Object> valorMenorIgualZeroExceptionHandler(ValorMenorIgualZeroException exception){
+
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("timespam", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_ACCEPTABLE);
+        body.put("erro", "Valor menor ou igual a zero!!");
         body.put("message", exception.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.NOT_ACCEPTABLE);
