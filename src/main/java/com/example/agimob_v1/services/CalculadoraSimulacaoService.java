@@ -82,8 +82,8 @@ public class CalculadoraSimulacaoService {
         double valorJurosParcela = saldoDevedor * jurosMesAgibank;
         double valorTotalParcela = amortizacao + valorJurosParcela;
 
-        double valorTotalFinanciamento = price(simulacao).stream().mapToDouble(ParcelaDto::getValorTotalParcela).sum();
-        double valorTotalJuros = price(simulacao).stream().mapToDouble(ParcelaDto::getValorJurosParcela).sum();
+        double valorTotalFinanciamento = price(simulacao).stream().mapToDouble(ParcelaDto::valorTotalParcela).sum();
+        double valorTotalJuros = price(simulacao).stream().mapToDouble(ParcelaDto::valorJurosParcela).sum();
 
 
         return new SimulacaoAgibankResponse(valorJurosParcela,valorTotalFinanciamento,valorTotalJuros);

@@ -4,8 +4,4 @@ public class FormatoIndevidoException extends RuntimeException{
     public FormatoIndevidoException(String message){
         super(message);
     }
-
-    public FormatoIndevidoException(){
-        super("Formato inserido não suportado!");
-    }
 }

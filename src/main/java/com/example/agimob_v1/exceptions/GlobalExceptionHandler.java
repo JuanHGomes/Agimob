@@ -25,5 +25,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_ACCEPTABLE);
     }
 
+    @ExceptionHandler(ValorIgualOuMenorQueZeroException.class)
+    private ResponseEntity<Object> ValorIgualOuMenorQueZeroExceptionHandler(ValorIgualOuMenorQueZeroException exception){
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("timestam", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_ACCEPTABLE);
+        body.put("erro", "Valor menor ou igual a 0, insira um valor válido!");
+        body.put("message", exception.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_ACCEPTABLE);
+    }
+
 
 }
