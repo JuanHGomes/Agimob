@@ -1,29 +1,21 @@
 package com.example.agimob_v1.dto;
 
-//DTO DE ENTRADA!
+import com.example.agimob_v1.model.Taxa;
+import com.example.agimob_v1.model.Usuario;
+import lombok.Data;
 
+import java.time.LocalDate;
+
+//DTO DE ENTRADA!
+@Data
 public class SimulacaoRequestDTO {
-    private Double valorFinanciamento;
-    private Double valorEntrada;
+    private LocalDate data;
+    private Double valor_total;
+    private Double valor_entrada;
     private Integer prazo;
     private Double renda_usuario;
     private Double renda_participante;
-    private String email_usuario;
-
-    public double getValorFinanciamento() {
-        return valorFinanciamento;
-    }
-
-    public double getValorEntrada() {
-        return valorEntrada;
-    }
-
-    public int getPrazo() {
-        return prazo;
-    }
-
-    public String getEmail_usuario(){
-        return email_usuario;
-    }
-
+    private String tipo_modalidade;
+    private Taxa taxa;
+    private Usuario usuario;
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,7 +21,7 @@ public class Simulacao {
 
     @Column(nullable = false, name = "data")
     @CreationTimestamp
-    private LocalDateTime data;
+    private LocalDate data;
 
     @Column(nullable = false, name = "valor_total")
     private Double valor_total;
