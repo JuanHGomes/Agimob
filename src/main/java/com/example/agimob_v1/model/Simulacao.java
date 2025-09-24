@@ -1,14 +1,14 @@
 package com.example.agimob_v1.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Simulacao {
 
     @Id
@@ -22,8 +22,6 @@ public class Simulacao {
     @Column(nullable = false)
     private double valor_entrada;
 
-
-
     @Column(nullable = false)
     private int prazo;
     private double renda_usuario;
@@ -33,17 +31,19 @@ public class Simulacao {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
+    @Column(nullable = false)
+    private double taxaAplicada;
 
-    public Simulacao() {
-    }
+    @Column(nullable = false)
+    private String tipo;
 
-    public Simulacao(Usuario usuario, double valor_total, double valor_entrada, int prazo) {
+    public Simulacao(double valor_total, double valor_entrada, int prazo, Usuario usuario, double taxaAplicada, String tipo) {
         this.data = LocalDateTime.now();
         this.valor_total = valor_total;
         this.valor_entrada = valor_entrada;
         this.prazo = prazo;
         this.usuario = usuario;
+        this.taxaAplicada = taxaAplicada;
+        this.tipo = tipo;
     }
-
-
 }

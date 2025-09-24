@@ -1,8 +1,7 @@
 package com.example.agimob_v1.services;
 
 import com.example.agimob_v1.dto.ParcelaDto;
-import com.example.agimob_v1.dto.SimulacaoAgibankResponse;
-import com.example.agimob_v1.dto.SimulacaoRequest;
+import com.example.agimob_v1.dto.SimulacaoAgibankResponseDto;
 import com.example.agimob_v1.model.Simulacao;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,6 @@ import java.util.List;
 
 @Service
 public class CalculadoraSimulacaoService {
-    private static final double jurosMesOutrosBancos = 0.12/12;
-    private static final double jurosMesAgibank = 0.09/12;
 
 
     public  List<ParcelaDto> sac(Simulacao simulacao){
@@ -22,7 +19,7 @@ public class CalculadoraSimulacaoService {
 
         List<ParcelaDto> parcelas = new ArrayList<>();
         for (int i = 1; i <= simulacao.getPrazo() ; i++) {
-            double valorJurosParcela = saldoDevedor * jurosMesOutrosBancos;
+            double valorJurosParcela = saldoDevedor * simulacao.getTaxaAplicada();
             double valorTotalParcela = amortizacao + valorJurosParcela;
 
             saldoDevedor -= amortizacao;
@@ -50,12 +47,12 @@ public class CalculadoraSimulacaoService {
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
 
         double parcelaFixa = saldoDevedor*
-                (jurosMesOutrosBancos*(Math.pow(1+jurosMesOutrosBancos,simulacao.getPrazo())
-                        /(Math.pow(1+ jurosMesOutrosBancos,simulacao.getPrazo())-1))
+                (simulacao.getTaxaAplicada()*(Math.pow(1+ simulacao.getTaxaAplicada(),simulacao.getPrazo())
+                        /(Math.pow(1+ simulacao.getTaxaAplicada(),simulacao.getPrazo())-1))
                 );
 
         for (int i = 1; i <= simulacao.getPrazo() ; i++) {
-            double jurosSaldoDevedor = saldoDevedor* jurosMesOutrosBancos;
+            double jurosSaldoDevedor = saldoDevedor* simulacao.getTaxaAplicada();
             double amortizacaoMes = parcelaFixa - jurosSaldoDevedor;
 
             saldoDevedor -= amortizacaoMes;
@@ -75,17 +72,17 @@ public class CalculadoraSimulacaoService {
 
     }
 
-    public SimulacaoAgibankResponse agibank(Simulacao simulacao){
+    public SimulacaoAgibankResponseDto agibank(Simulacao simulacao){
 
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
         double amortizacao = saldoDevedor/simulacao.getPrazo();
-        double valorJurosParcela = saldoDevedor * jurosMesAgibank;
+        double valorJurosParcela = saldoDevedor * simulacao.getTaxaAplicada();
         double valorTotalParcela = amortizacao + valorJurosParcela;
 
         double valorTotalFinanciamento = price(simulacao).stream().mapToDouble(ParcelaDto::valorTotalParcela).sum();
         double valorTotalJuros = price(simulacao).stream().mapToDouble(ParcelaDto::valorJurosParcela).sum();
 
 
-        return new SimulacaoAgibankResponse(valorJurosParcela,valorTotalFinanciamento,valorTotalJuros);
+        return new SimulacaoAgibankResponseDto(valorJurosParcela,valorTotalFinanciamento,valorTotalJuros);
     }
 }
