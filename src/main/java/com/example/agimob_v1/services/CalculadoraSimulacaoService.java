@@ -1,8 +1,7 @@
 package com.example.agimob_v1.services;
 
 import com.example.agimob_v1.dto.ParcelaDto;
-import com.example.agimob_v1.dto.SimulacaoAgibankResponse;
-import com.example.agimob_v1.dto.SimulacaoRequest;
+import com.example.agimob_v1.dto.SimulacaoAgibankResponseDto;
 import com.example.agimob_v1.model.Simulacao;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +43,7 @@ public class CalculadoraSimulacaoService {
         //m = p * (j*[(1+j)^n]/[(1+j)^n]-1)
         //m = parcela fixa
         //p = valor do financiamento
-        //j = taxa de jurosMesOutrosBancos
+        //j = taxaAplicada de jurosMesOutrosBancos
         //n = numero de parcelas
         List<ParcelaDto> parcelas = new ArrayList<>();
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
@@ -75,7 +74,7 @@ public class CalculadoraSimulacaoService {
 
     }
 
-    public SimulacaoAgibankResponse agibank(Simulacao simulacao){
+    public SimulacaoAgibankResponseDto agibank(Simulacao simulacao){
 
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
         double amortizacao = saldoDevedor/simulacao.getPrazo();
@@ -86,6 +85,6 @@ public class CalculadoraSimulacaoService {
         double valorTotalJuros = price(simulacao).stream().mapToDouble(ParcelaDto::getValorJurosParcela).sum();
 
 
-        return new SimulacaoAgibankResponse(valorJurosParcela,valorTotalFinanciamento,valorTotalJuros);
+        return new SimulacaoAgibankResponseDto(valorJurosParcela,valorTotalFinanciamento,valorTotalJuros);
     }
 }

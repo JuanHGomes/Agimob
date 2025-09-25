@@ -1,15 +1,15 @@
 package com.example.agimob_v1.dto;
 
-public class SimulacaoAgibankResponse {
+public class SimulacaoAgibankResponseDto {
     private final static int prazoMaximo = 420;
     private double parcela;
     private double valorTotal;
     private double totalJuros;
 
-    public SimulacaoAgibankResponse() {
+    public SimulacaoAgibankResponseDto() {
     }
 
-    public SimulacaoAgibankResponse(double parcela, double valorTotal, double totalJuros) {
+    public SimulacaoAgibankResponseDto(double parcela, double valorTotal, double totalJuros) {
         this.parcela = parcela;
         this.valorTotal = valorTotal;
         this.totalJuros = totalJuros;

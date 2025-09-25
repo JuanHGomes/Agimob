@@ -1,14 +1,21 @@
 package com.example.agimob_v1.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
     private Long id;
 
     @Column(unique = true)
@@ -17,10 +24,7 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private List<Simulacao> simulacoes;
 
-    public Usuario() {
-    }
-
-    public Usuario(String email) {
+    public Usuario(String email){
         this.email = email;
     }
 }
