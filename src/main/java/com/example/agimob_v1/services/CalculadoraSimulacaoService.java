@@ -11,9 +11,6 @@ import java.util.List;
 
 @Service
 public class CalculadoraSimulacaoService {
-    private static final double jurosMesOutrosBancos = 0.12/12;
-    private static final double jurosMesAgibank = 0.09/12;
-
 
     public  List<ParcelaDto> sac(Simulacao simulacao){
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
@@ -21,7 +18,7 @@ public class CalculadoraSimulacaoService {
 
         List<ParcelaDto> parcelas = new ArrayList<>();
         for (int i = 1; i <= simulacao.getPrazo() ; i++) {
-            double valorJurosParcela = saldoDevedor * jurosMesOutrosBancos;
+            double valorJurosParcela = saldoDevedor * simulacao.getId_taxa().getValor_taxa();
             double valorTotalParcela = amortizacao + valorJurosParcela;
 
             saldoDevedor -= amortizacao;
@@ -45,16 +42,17 @@ public class CalculadoraSimulacaoService {
         //p = valor do financiamento
         //j = taxaAplicada de jurosMesOutrosBancos
         //n = numero de parcelas
+        double juros = simulacao.getId_taxa().getValor_taxa();
         List<ParcelaDto> parcelas = new ArrayList<>();
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
 
         double parcelaFixa = saldoDevedor*
-                (jurosMesOutrosBancos*(Math.pow(1+jurosMesOutrosBancos,simulacao.getPrazo())
-                        /(Math.pow(1+ jurosMesOutrosBancos,simulacao.getPrazo())-1))
+                (juros*(Math.pow(1+juros,simulacao.getPrazo())
+                        /(Math.pow(1+ juros,simulacao.getPrazo())-1))
                 );
 
         for (int i = 1; i <= simulacao.getPrazo() ; i++) {
-            double jurosSaldoDevedor = saldoDevedor* jurosMesOutrosBancos;
+            double jurosSaldoDevedor = saldoDevedor* juros;
             double amortizacaoMes = parcelaFixa - jurosSaldoDevedor;
 
             saldoDevedor -= amortizacaoMes;
@@ -75,10 +73,11 @@ public class CalculadoraSimulacaoService {
     }
 
     public SimulacaoAgibankResponseDto agibank(Simulacao simulacao){
+        double juros = simulacao.getId_taxa().getValor_taxa();
 
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
         double amortizacao = saldoDevedor/simulacao.getPrazo();
-        double valorJurosParcela = saldoDevedor * jurosMesAgibank;
+        double valorJurosParcela = saldoDevedor * juros;
         double valorTotalParcela = amortizacao + valorJurosParcela;
 
         double valorTotalFinanciamento = price(simulacao).stream().mapToDouble(ParcelaDto::getValorTotalParcela).sum();

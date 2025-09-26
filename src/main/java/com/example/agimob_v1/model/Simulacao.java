@@ -14,38 +14,45 @@ public class Simulacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_simulacao")
+    @Column(name = "Id_simulacao")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="data")
     private LocalDateTime data;
 
     @Column(nullable = false, name ="valor_total")
     private double valor_total;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name ="valor_entrada")
     private double valor_entrada;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name ="prazo")
     private int prazo;
 
-    private double taxaAplicada;
-
+    @Column(name = "renda_usuario")
     private double renda_usuario;
 
+    @Column(name ="renda_participante")
     private double renda_participante;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "Id_usuario")
     private Usuario usuario;
 
+    @Column(name ="tipo_modalidade")
+    private String tipo_modalidade;
 
-    public Simulacao(double valor_total, double valor_entrada, int prazo, double taxaAplicada, Usuario usuario) {
+    @ManyToOne
+    @JoinColumn(name = "Id_taxa")
+    private Taxa id_taxa;
+
+
+    public Simulacao(double valor_total, double valor_entrada, int prazo, Taxa id_taxa, Usuario usuario) {
         this.data = LocalDateTime.now();
         this.valor_total = valor_total;
         this.valor_entrada = valor_entrada;
         this.prazo = prazo;
-        this.taxaAplicada = taxaAplicada;
+        this.id_taxa = id_taxa;
         this.usuario = usuario;
     }
 }

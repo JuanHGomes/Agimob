@@ -13,6 +13,7 @@ public class SimulacaoRequestDto {
     private double valorEntrada;
     private int prazo;
     private String email;
+    private String tipo;
 
 
 

@@ -15,10 +15,10 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
+    @Column(name = "Id_usuario")
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, name="email")
     private String email;
 
     @OneToMany(mappedBy = "usuario")

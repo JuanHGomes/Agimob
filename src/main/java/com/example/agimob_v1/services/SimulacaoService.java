@@ -1,8 +1,6 @@
 package com.example.agimob_v1.services;
 
-import com.example.agimob_v1.dto.SimulacaoRequestDto;
-import com.example.agimob_v1.dto.SimulacaoResponseDto;
-import com.example.agimob_v1.dto.UsuarioDto;
+import com.example.agimob_v1.dto.*;
 import com.example.agimob_v1.model.Simulacao;
 import com.example.agimob_v1.model.Taxa;
 import com.example.agimob_v1.model.Usuario;
@@ -45,16 +43,23 @@ public class SimulacaoService {
         double valorFinanciamento = simulacaoRequest.getValorFinanciamento();
         double valorEntrada = simulacaoRequest.getValorEntrada();
         int prazo = simulacaoRequest.getPrazo();
-        double taxaAplicada = taxaRepository.findVigenteByCodigo("AGIBANK", LocalDateTime.now()).map(Taxa::getValor).orElseThrow();
+        Taxa taxa = taxaRepository.findVigenteByCodigo("AGIBANK", LocalDateTime.now()).orElseThrow();
 
-
-
-
-        Simulacao simulacao = new Simulacao( valorFinanciamento, valorEntrada, prazo, taxaAplicada, usuario);
+        Simulacao simulacao = new Simulacao(valorFinanciamento, valorEntrada, prazo, taxa, usuario);
 
         simulacaoRepository.save(simulacao);
 
-        return new SimulacaoResponseDto(calculadoraSimulacaoService.sac(simulacao), calculadoraSimulacaoService.price(simulacao), calculadoraSimulacaoService.agibank(simulacao));
+
+        if (simulacaoRequest.getTipo().toUpperCase().equals("SAC")) {
+           return toSimulacaoResponseDto(calculadoraSimulacaoService.sac(simulacao));
+
+        }
+        if (simulacaoRequest.getTipo().toUpperCase().equals("PRICE")) {
+            SimulacaoPriceResponseDto = calculadoraSimulacaoService.price(simulacao);
+        }
+        if (simulacaoRequest.getTipo().toUpperCase().equals("AMBOS"))
+
+
 
     }
 
