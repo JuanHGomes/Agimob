@@ -1,5 +1,6 @@
 package com.example.agimob_v1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 

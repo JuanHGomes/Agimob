@@ -2,6 +2,7 @@ package com.example.agimob_v1.controller;
 
 import com.example.agimob_v1.dto.SimulacaoRequestDto;
 import com.example.agimob_v1.dto.SimulacaoResponseDto;
+import com.example.agimob_v1.dto.UsuarioDto;
 import com.example.agimob_v1.model.Simulacao;
 import com.example.agimob_v1.services.SimulacaoService;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class SimulacaoController {
     }
 
     @GetMapping("/{email}")
-    public List<Simulacao> simulacoesPorUsuario(@PathVariable String email){
+    public UsuarioDto simulacoesPorUsuario(@PathVariable String email){
        return simulacaoService.listarSimulacoesPorUsuarioId(email);
     }
 }
