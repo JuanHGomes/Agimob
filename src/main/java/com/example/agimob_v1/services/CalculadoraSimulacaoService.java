@@ -2,6 +2,7 @@ package com.example.agimob_v1.services;
 
 import com.example.agimob_v1.dto.ParcelaDto;
 import com.example.agimob_v1.dto.SimulacaoAgibankResponseDto;
+import com.example.agimob_v1.dto.SimulacaoRequestDto;
 import com.example.agimob_v1.model.Simulacao;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +13,20 @@ import java.util.List;
 @Service
 public class CalculadoraSimulacaoService {
 
+    public int prazoConvertido(Simulacao simulacao){
+       simulacao.setPrazo(simulacao.getPrazo()*12);
+
+       return simulacao.getPrazo();
+    }
+
     public  List<ParcelaDto> sac(Simulacao simulacao){
+        //adiciona o metodo de conversao a uma variavel do tipo int
+        int prazo = prazoConvertido(simulacao);
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
-        double amortizacao = saldoDevedor/simulacao.getPrazo();
+        double amortizacao = saldoDevedor/prazo;
 
         List<ParcelaDto> parcelas = new ArrayList<>();
-        for (int i = 1; i <= simulacao.getPrazo() ; i++) {
+        for (int i = 1; i <= prazo ; i++) {
             double valorJurosParcela = saldoDevedor * simulacao.getId_taxa().getValor_taxa();
             double valorTotalParcela = amortizacao + valorJurosParcela;
 
@@ -42,16 +51,20 @@ public class CalculadoraSimulacaoService {
         //p = valor do financiamento
         //j = taxaAplicada de jurosMesOutrosBancos
         //n = numero de parcelas
+
+        //adiciona o metodo de conversao a uma variavel do tipo int
+        int prazo = prazoConvertido(simulacao);
         double juros = simulacao.getId_taxa().getValor_taxa();
+
         List<ParcelaDto> parcelas = new ArrayList<>();
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
 
         double parcelaFixa = saldoDevedor*
-                (juros*(Math.pow(1+juros,simulacao.getPrazo())
-                        /(Math.pow(1+ juros,simulacao.getPrazo())-1))
+                (juros*(Math.pow(1+juros,prazo)
+                        /(Math.pow(1+ juros,prazo)-1))
                 );
 
-        for (int i = 1; i <= simulacao.getPrazo() ; i++) {
+        for (int i = 1; i <= prazo ; i++) {
             double jurosSaldoDevedor = saldoDevedor* juros;
             double amortizacaoMes = parcelaFixa - jurosSaldoDevedor;
 
@@ -73,10 +86,11 @@ public class CalculadoraSimulacaoService {
     }
 
     public SimulacaoAgibankResponseDto agibank(Simulacao simulacao){
+        int prazo = prazoConvertido(simulacao);
         double juros = simulacao.getId_taxa().getValor_taxa();
 
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
-        double amortizacao = saldoDevedor/simulacao.getPrazo();
+        double amortizacao = saldoDevedor/prazo;
         double valorJurosParcela = saldoDevedor * juros;
         double valorTotalParcela = amortizacao + valorJurosParcela;
 
