@@ -16,6 +16,7 @@ import java.util.List;
 
 @Service
 public class SimulacaoService {
+
     private final SimulacaoRepository simulacaoRepository;
     private final UsuarioRepository usuarioRepository;
     private final UsuarioService usuarioService;
@@ -23,6 +24,13 @@ public class SimulacaoService {
     private final TaxaRepository taxaRepository;
     @Autowired
     private final UsuarioDtoMapper usuarioDtoMapper;
+
+
+    public int prazoConvertido(SimulacaoRequestDto simulacaoRequest){
+        simulacaoRequest.setPrazo(simulacaoRequest.getPrazo()*12);
+
+        return simulacaoRequest.getPrazo();
+    }
 
     public SimulacaoService(SimulacaoRepository simulacaoRepository, UsuarioRepository usuarioRepository, UsuarioService usuarioService, CalculadoraSimulacaoService calculadoraSimulacaoService, TaxaRepository taxaRepository, UsuarioDtoMapper usuarioDtoMapper) {
         this.simulacaoRepository = simulacaoRepository;
@@ -42,22 +50,22 @@ public class SimulacaoService {
 
         double valorFinanciamento = simulacaoRequest.getValorFinanciamento();
         double valorEntrada = simulacaoRequest.getValorEntrada();
-        int prazo = simulacaoRequest.getPrazo();
+        int prazo = prazoConvertido(simulacaoRequest);
         Taxa taxa = taxaRepository.findVigenteByCodigo("AGIBANK", LocalDateTime.now()).orElseThrow();
 
         Simulacao simulacao = new Simulacao(valorFinanciamento, valorEntrada, prazo, taxa, usuario);
 
         simulacaoRepository.save(simulacao);
 
-
-        if (simulacaoRequest.getTipo().toUpperCase().equals("SAC")) {
-           return toSimulacaoResponseDto(calculadoraSimulacaoService.sac(simulacao));
+        if (simulacaoRequest.getTipo().equalsIgnoreCase("SAC")) {
+            return toSimulacaoResponseDto(calculadoraSimulacaoService.sac(simulacao));
 
         }
         if (simulacaoRequest.getTipo().toUpperCase().equals("PRICE")) {
             SimulacaoPriceResponseDto = calculadoraSimulacaoService.price(simulacao);
         }
         if (simulacaoRequest.getTipo().toUpperCase().equals("AMBOS"))
+    }
 
 
 
@@ -69,4 +77,6 @@ public class SimulacaoService {
         return usuarioDtoMapper.toDto(usuarioRepository.findByEmail(email).orElseThrow());
 
     }
+
+
 }
