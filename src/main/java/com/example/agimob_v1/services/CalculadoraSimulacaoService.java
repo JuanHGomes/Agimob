@@ -2,9 +2,12 @@ package com.example.agimob_v1.services;
 
 import com.example.agimob_v1.dto.ParcelaDto;
 import com.example.agimob_v1.dto.SimulacaoAgibankResponseDto;
+import com.example.agimob_v1.dto.SimulacaoPriceResponseDto;
+import com.example.agimob_v1.dto.SimulacaoSacResponseDto;
 import com.example.agimob_v1.model.Simulacao;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.spec.OAEPParameterSpec;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +15,7 @@ import java.util.List;
 @Service
 public class CalculadoraSimulacaoService {
 
-    public  List<ParcelaDto> sac(Simulacao simulacao){
+    public List<ParcelaDto> sac(Simulacao simulacao){
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
         double amortizacao = saldoDevedor/simulacao.getPrazo();
 
@@ -72,18 +75,18 @@ public class CalculadoraSimulacaoService {
 
     }
 
-    public SimulacaoAgibankResponseDto agibank(Simulacao simulacao){
-        double juros = simulacao.getId_taxa().getValor_taxa();
-
-        double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
-        double amortizacao = saldoDevedor/simulacao.getPrazo();
-        double valorJurosParcela = saldoDevedor * juros;
-        double valorTotalParcela = amortizacao + valorJurosParcela;
-
-        double valorTotalFinanciamento = price(simulacao).stream().mapToDouble(ParcelaDto::getValorTotalParcela).sum();
-        double valorTotalJuros = price(simulacao).stream().mapToDouble(ParcelaDto::getValorJurosParcela).sum();
-
-
-        return new SimulacaoAgibankResponseDto(valorJurosParcela,valorTotalFinanciamento,valorTotalJuros);
-    }
+//    public SimulacaoAgibankResponseDto agibank(Simulacao simulacao){
+//        double juros = simulacao.getId_taxa().getValor_taxa();
+//
+//        double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
+//        double amortizacao = saldoDevedor/simulacao.getPrazo();
+//        double valorJurosParcela = saldoDevedor * juros;
+//        double valorTotalParcela = amortizacao + valorJurosParcela;
+//
+//        double valorTotalFinanciamento = price(simulacao).stream().mapToDouble(ParcelaDto::getValorTotalParcela).sum();
+//        double valorTotalJuros = price(simulacao).stream().mapToDouble(ParcelaDto::getValorJurosParcela).sum();
+//
+//
+//        return new SimulacaoAgibankResponseDto(valorJurosParcela,valorTotalFinanciamento,valorTotalJuros);
+//    }
 }
