@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 public class SimulacaoRequestDto {
     private double valorFinanciamento;
     private double valorEntrada;
+    private double rendaUsuario;
+    private double rendaParticipante;
     private int prazo;
     private String email;
     private String tipo;

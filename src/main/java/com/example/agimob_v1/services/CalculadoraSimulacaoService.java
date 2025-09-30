@@ -1,7 +1,7 @@
 package com.example.agimob_v1.services;
 
 import com.example.agimob_v1.dto.ParcelaDto;
-import com.example.agimob_v1.dto.SimulacaoAgibankResponseDt
+import com.example.agimob_v1.dto.SimulacaoAgibankResponseDto;
 import com.example.agimob_v1.dto.SimulacaoRequestDto;
 
 import com.example.agimob_v1.dto.SimulacaoPriceResponseDto;
@@ -19,18 +19,37 @@ import java.util.List;
 public class CalculadoraSimulacaoService {
 
 
+    ParcelaDto ultimaParcela = calculadoraSimulacaoService.sac(simulacao).getLast();
+
+    Double valorFinanciado = valorFinanciamento-valorEntrada;
+
+    Double totalPagoSac = calculadoraSimulacaoService.sac(simulacao).stream().mapToDouble(ParcelaDto::getValorTotalParcela).sum();
+    Double totalPagoPrice = calculadoraSimulacaoService.price(simulacao).stream().mapToDouble(ParcelaDto::getValorTotalParcela).sum();
+    Double totalJurosSac = totalPagoSac - valorFinanciado;
+    Double totalJurosPrice = totalPagoPrice - valorFinanciado;
+
+    Double renda = simulacaoRequest.getRendaUsuario()+simulacaoRequest.getRendaParticipante();
+    Double rendaComprometida = (primeiraParcela.getValorTotalParcela()/renda)*100;
+
+    Double diferencaSacPrice = totalPagoPrice - totalPagoSac;
+
     public int prazoConvertido(Simulacao simulacao){
        simulacao.setPrazo(simulacao.getPrazo()*12);
 
        return simulacao.getPrazo();
     }
 
-    public  List<ParcelaDto> sac(Simulacao simulacao){
-        //adiciona o metodo de conversao a uma variavel do tipo int
-        int prazo = prazoConvertido(simulacao);
+    public double valorPrimeiraParcela(Simulacao simulacao){
+        return sac(simulacao).getFirst().getValorTotalParcela();
+    }
+
+    public double valorUltimaParcela(Simulacao simulacao){
+        return
+    }
 
     public List<ParcelaDto> sac(Simulacao simulacao){
-
+        //adiciona o metodo de conversao a uma variavel do tipo int
+        int prazo = prazoConvertido(simulacao);
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
         double amortizacao = saldoDevedor/prazo;
 
@@ -51,7 +70,10 @@ public class CalculadoraSimulacaoService {
                     ));
 
         }
-        return parcelas;
+         parcelas
+
+
+        return new SimulacaoSacResponseDto(pacerlas, primeiraParcela, ultimaParcela, valorToal, jurosTotla);
     }
 
     public List<ParcelaDto> price(Simulacao simulacao){
