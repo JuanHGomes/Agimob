@@ -7,6 +7,7 @@ import com.example.agimob_v1.model.Usuario;
 import com.example.agimob_v1.repository.SimulacaoRepository;
 import com.example.agimob_v1.repository.TaxaRepository;
 import com.example.agimob_v1.repository.UsuarioRepository;
+import com.example.agimob_v1.services.mappers.SimulacaoResponseMapper;
 import com.example.agimob_v1.services.mappers.UsuarioDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class SimulacaoService {
     private final TaxaRepository taxaRepository;
     @Autowired
     private final UsuarioDtoMapper usuarioDtoMapper;
+    @Autowired
+    private final SimulacaoResponseMapper simulacaoResponseMapper;
+
 
 
     public int prazoConvertido(SimulacaoRequestDto simulacaoRequest){
@@ -33,12 +37,15 @@ public class SimulacaoService {
     }
 
     public SimulacaoService(SimulacaoRepository simulacaoRepository, UsuarioRepository usuarioRepository, UsuarioService usuarioService, CalculadoraSimulacaoService calculadoraSimulacaoService, TaxaRepository taxaRepository, UsuarioDtoMapper usuarioDtoMapper) {
+
         this.simulacaoRepository = simulacaoRepository;
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
         this.calculadoraSimulacaoService = calculadoraSimulacaoService;
         this.taxaRepository = taxaRepository;
         this.usuarioDtoMapper = usuarioDtoMapper;
+
+        this.simulacaoResponseMapper = simulacaoResponseMapper;
     }
 
     public List<Simulacao> listarSimulacoes(){
@@ -52,22 +59,28 @@ public class SimulacaoService {
         double valorEntrada = simulacaoRequest.getValorEntrada();
         int prazo = prazoConvertido(simulacaoRequest);
         Taxa taxa = taxaRepository.findVigenteByCodigo("AGIBANK", LocalDateTime.now()).orElseThrow();
+        String tipoSimulacao = simulacaoRequest.getTipo();
 
         Simulacao simulacao = new Simulacao(valorFinanciamento, valorEntrada, prazo, taxa, usuario);
 
         simulacaoRepository.save(simulacao);
 
-        if (simulacaoRequest.getTipo().equalsIgnoreCase("SAC")) {
-            return toSimulacaoResponseDto(calculadoraSimulacaoService.sac(simulacao));
 
+
+        if (simulacaoRequest.getTipo().toUpperCase().equals("SAC")) {
+          return simulacaoResponseMapper.toSacResponseDto(tipoSimulacao, calculadoraSimulacaoService.sac(simulacao))
         }
-        if (simulacaoRequest.getTipo().toUpperCase().equals("PRICE")) {
-            SimulacaoPriceResponseDto = calculadoraSimulacaoService.price(simulacao);
+        else if (simulacaoRequest.getTipo().toUpperCase().equals("PRICE")) {
+            return  simulacaoResponseMapper.toPriceResponseDto(tipoSimulacao, calculadoraSimulacaoService.price(simulacao));
         }
+        else if (simulacaoRequest.getTipo().toUpperCase().equals("AMBOS")){
+            return simulacaoResponseMapper.toAmbosResponseDto(simulacaoRequest.getTipo(), calculadoraSimulacaoService.sac(simulacao), calculadoraSimulacaoService.price(simulacao));
+        }
+
         if (simulacaoRequest.getTipo().toUpperCase().equals("AMBOS"))
     }
 
-
+        throw new Exception();
 
     }
 

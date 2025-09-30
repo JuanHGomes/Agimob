@@ -1,17 +1,23 @@
 package com.example.agimob_v1.services;
 
 import com.example.agimob_v1.dto.ParcelaDto;
-import com.example.agimob_v1.dto.SimulacaoAgibankResponseDto;
+import com.example.agimob_v1.dto.SimulacaoAgibankResponseDt
 import com.example.agimob_v1.dto.SimulacaoRequestDto;
+
+import com.example.agimob_v1.dto.SimulacaoPriceResponseDto;
+import com.example.agimob_v1.dto.SimulacaoSacResponseDto;
+
 import com.example.agimob_v1.model.Simulacao;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.spec.OAEPParameterSpec;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Service
 public class CalculadoraSimulacaoService {
+
 
     public int prazoConvertido(Simulacao simulacao){
        simulacao.setPrazo(simulacao.getPrazo()*12);
@@ -22,6 +28,9 @@ public class CalculadoraSimulacaoService {
     public  List<ParcelaDto> sac(Simulacao simulacao){
         //adiciona o metodo de conversao a uma variavel do tipo int
         int prazo = prazoConvertido(simulacao);
+
+    public List<ParcelaDto> sac(Simulacao simulacao){
+
         double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
         double amortizacao = saldoDevedor/prazo;
 
@@ -85,6 +94,7 @@ public class CalculadoraSimulacaoService {
 
     }
 
+
     public SimulacaoAgibankResponseDto agibank(Simulacao simulacao){
         int prazo = prazoConvertido(simulacao);
         double juros = simulacao.getId_taxa().getValor_taxa();
@@ -100,4 +110,5 @@ public class CalculadoraSimulacaoService {
 
         return new SimulacaoAgibankResponseDto(valorJurosParcela,valorTotalFinanciamento,valorTotalJuros);
     }
+
 }

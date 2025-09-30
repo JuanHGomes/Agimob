@@ -4,23 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.swing.text.ParagraphView;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class SimulacaoResponseDto {
-    private SimulacaoSacResponseDto parcelasSac;
-    private SimulacaoPriceResponseDto parcelasPrice;
-    private SimulacaoAgibankResponseDto simulacaoAgibank;
-
-    public SimulacaoResponseDto(SimulacaoSacResponseDto parcelasSac) {
-        this.parcelasSac = parcelasSac;
-    }
-
-    public SimulacaoResponseDto(SimulacaoPriceResponseDto parcelasPrice) {
-        this.parcelasPrice = parcelasPrice;
-    }
+    private String tipo;
+    private List<ParcelaDto> parcelasSac;
+    private List<ParcelaDto> parcelasPrice;
 
 }
 
