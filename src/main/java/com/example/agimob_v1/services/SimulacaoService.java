@@ -17,6 +17,7 @@ import java.util.List;
 
 @Service
 public class SimulacaoService {
+
     private final SimulacaoRepository simulacaoRepository;
     private final UsuarioRepository usuarioRepository;
     private final UsuarioService usuarioService;
@@ -27,7 +28,16 @@ public class SimulacaoService {
     @Autowired
     private final SimulacaoResponseMapper simulacaoResponseMapper;
 
-    public SimulacaoService(SimulacaoRepository simulacaoRepository, UsuarioRepository usuarioRepository, UsuarioService usuarioService, CalculadoraSimulacaoService calculadoraSimulacaoService, TaxaRepository taxaRepository, UsuarioDtoMapper usuarioDtoMapper, SimulacaoResponseMapper simulacaoResponseMapper) {
+
+
+    public int prazoConvertido(SimulacaoRequestDto simulacaoRequest){
+        simulacaoRequest.setPrazo(simulacaoRequest.getPrazo()*12);
+
+        return simulacaoRequest.getPrazo();
+    }
+
+    public SimulacaoService(SimulacaoRepository simulacaoRepository, UsuarioRepository usuarioRepository, UsuarioService usuarioService, CalculadoraSimulacaoService calculadoraSimulacaoService, TaxaRepository taxaRepository, UsuarioDtoMapper usuarioDtoMapper) {
+
         this.simulacaoRepository = simulacaoRepository;
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
@@ -47,7 +57,7 @@ public class SimulacaoService {
 
         double valorFinanciamento = simulacaoRequest.getValorFinanciamento();
         double valorEntrada = simulacaoRequest.getValorEntrada();
-        int prazo = simulacaoRequest.getPrazo();
+        int prazo = prazoConvertido(simulacaoRequest);
         Taxa taxa = taxaRepository.findVigenteByCodigo("AGIBANK", LocalDateTime.now()).orElseThrow();
         String tipoSimulacao = simulacaoRequest.getTipo();
 
@@ -56,9 +66,9 @@ public class SimulacaoService {
         simulacaoRepository.save(simulacao);
 
 
-        if (simulacaoRequest.getTipo().toUpperCase().equals("SAC")) {
-          return simulacaoResponseMapper.toSacResponseDto(tipoSimulacao, calculadoraSimulacaoService.sac(simulacao));
 
+        if (simulacaoRequest.getTipo().toUpperCase().equals("SAC")) {
+          return simulacaoResponseMapper.toSacResponseDto(tipoSimulacao, calculadoraSimulacaoService.sac(simulacao))
         }
         else if (simulacaoRequest.getTipo().toUpperCase().equals("PRICE")) {
             return  simulacaoResponseMapper.toPriceResponseDto(tipoSimulacao, calculadoraSimulacaoService.price(simulacao));
@@ -66,6 +76,9 @@ public class SimulacaoService {
         else if (simulacaoRequest.getTipo().toUpperCase().equals("AMBOS")){
             return simulacaoResponseMapper.toAmbosResponseDto(simulacaoRequest.getTipo(), calculadoraSimulacaoService.sac(simulacao), calculadoraSimulacaoService.price(simulacao));
         }
+
+        if (simulacaoRequest.getTipo().toUpperCase().equals("AMBOS"))
+    }
 
         throw new Exception();
 
@@ -77,4 +90,6 @@ public class SimulacaoService {
         return usuarioDtoMapper.toDto(usuarioRepository.findByEmail(email).orElseThrow());
 
     }
+
+
 }
