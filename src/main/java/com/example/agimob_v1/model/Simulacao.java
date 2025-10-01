@@ -47,11 +47,13 @@ public class Simulacao {
     private Taxa id_taxa;
 
 
-    public Simulacao(double valor_total, double valor_entrada, int prazo, Taxa id_taxa, Usuario usuario) {
+    public Simulacao(double valor_total, double valor_entrada, int prazo, double renda_usuario, double renda_participante, Taxa id_taxa, Usuario usuario) {
         this.data = LocalDateTime.now();
         this.valor_total = valor_total;
         this.valor_entrada = valor_entrada;
         this.prazo = prazo;
+        this.renda_usuario = renda_usuario;
+        this.renda_participante = renda_participante;
         this.id_taxa = id_taxa;
         this.usuario = usuario;
     }

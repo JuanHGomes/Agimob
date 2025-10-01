@@ -14,8 +14,7 @@ public class SimulacaoResponseDto {
     private String tipo;
     private List<ParcelaDto> parcelasSac;
     private List<ParcelaDto> parcelasPrice;
-//    private InformacoesAdicionaisDto informacoesAdicionais;
-
+    private InformacoesAdicionaisDto informacoesAdicionais;
 }
 
 

@@ -1,11 +1,6 @@
     package com.example.agimob_v1.services;
 
-    import com.example.agimob_v1.dto.ParcelaDto;
-    import com.example.agimob_v1.dto.SimulacaoAgibankResponseDto;
-    import com.example.agimob_v1.dto.SimulacaoRequestDto;
-
-    import com.example.agimob_v1.dto.SimulacaoPriceResponseDto;
-    import com.example.agimob_v1.dto.SimulacaoSacResponseDto;
+    import com.example.agimob_v1.dto.*;
 
     import com.example.agimob_v1.model.Simulacao;
     import org.springframework.stereotype.Service;
@@ -18,45 +13,43 @@
     @Service
     public class CalculadoraSimulacaoService {
 
-        public int prazoConvertido(Simulacao simulacao){
-           simulacao.setPrazo(simulacao.getPrazo()*12);
 
-           return simulacao.getPrazo();
+        public double valorPrimeiraParcela(List<ParcelaDto> parcelas){
+            return parcelas.getFirst().getValorTotalParcela();
         }
-//
-//        public double valorPrimeiraParcela(List<ParcelaDto> parcelas){
-//            return parcelas.getFirst().getValorTotalParcela();
-//        }
-//
-//        public double valorUltimaParcela(List<ParcelaDto> parcelas){
-//            return parcelas.getLast().getValorTotalParcela();
-//        }
-//
-//        public double valorTotalFinanciamento(List<ParcelaDto> parcelas){
-//            return parcelas.stream().mapToDouble(ParcelaDto::getValorJurosParcela).sum();
-//        }
-//
-//        public double rendaComprometida(Simulacao simulacao, List<ParcelaDto> parcelas){
-//            return (rendaTotal(simulacao)/valorPrimeiraParcela(parcelas))*100;
-//        }
-//
-//        public double rendaTotal(Simulacao simulacao){
-//            return simulacao.getRenda_usuario()+ simulacao.getRenda_participante();
-//        }
-//
-//        public InformacoesAdicionaisDto calcularInformacoesAdicionais(Simulacao simulacao, List<ParcelaDto> parcelas){
-//            double primeiraParcela = valorPrimeiraParcela(parcelas);
-//            double ultimaParcela = valorUltimaParcela(parcelas);
-//            double valorTotalFinanciamento = parcelas.stream().mapToDouble(ParcelaDto::getValorTotalParcela).sum();
-//            double valorTotalJuros = valorTotalFinanciamento(parcelas);
-//            double rendaComprometida = rendaComprometida(simulacao, parcelas);
-//
-//            return new InformacoesAdicionaisDto(primeiraParcela, ultimaParcela, valorTotalFinanciamento, valorTotalJuros, rendaComprometida);
-//        }
+
+        public double valorUltimaParcela(List<ParcelaDto> parcelas){
+            return parcelas.getLast().getValorTotalParcela();
+        }
+
+        public double valorTotalFinanciamento(List<ParcelaDto> parcelas){
+            return parcelas.stream().mapToDouble(ParcelaDto::getValorJurosParcela).sum();
+        }
+
+        public double rendaComprometida(Simulacao simulacao, List<ParcelaDto> parcelas){
+            return (rendaTotal(simulacao)/valorPrimeiraParcela(parcelas))*100;
+        }
+
+        public double rendaTotal(Simulacao simulacao){
+            return simulacao.getRenda_usuario()+ simulacao.getRenda_participante();
+        }
+
+        public InformacoesAdicionaisDto calcularInformacoesAdicionais(Simulacao simulacao, List<ParcelaDto> parcelas){
+
+            double primeiraParcela = valorPrimeiraParcela(parcelas);
+            double ultimaParcela = valorUltimaParcela(parcelas);
+            double valorTotalFinanciamento = parcelas.stream().mapToDouble(ParcelaDto::getValorTotalParcela).sum();
+            double valorTotalJuros = valorTotalFinanciamento(parcelas);
+            double rendaComprometida = rendaComprometida(simulacao, parcelas);
+            // FALTA DIFERENÇA PRICE - SAC
+
+            return new InformacoesAdicionaisDto(primeiraParcela, ultimaParcela, valorTotalFinanciamento, valorTotalJuros, rendaComprometida);
+
+        }
 
         public List<ParcelaDto> sac(Simulacao simulacao){
             //adiciona o metodo de conversao a uma variavel do tipo int
-            int prazo = prazoConvertido(simulacao);
+            int prazo = simulacao.getPrazo();
             double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
             double amortizacao = saldoDevedor/prazo;
 
@@ -88,7 +81,7 @@
             //n = numero de parcelas
 
             //adiciona o metodo de conversao a uma variavel do tipo int
-            int prazo = prazoConvertido(simulacao);
+            int prazo = simulacao.getPrazo();
             double juros = simulacao.getId_taxa().getValor_taxa();
 
             List<ParcelaDto> parcelas = new ArrayList<>();
@@ -122,7 +115,7 @@
 
 
         public SimulacaoAgibankResponseDto agibank(Simulacao simulacao){
-            int prazo = prazoConvertido(simulacao);
+            int prazo = simulacao.getPrazo();
             double juros = simulacao.getId_taxa().getValor_taxa();
 
             double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();

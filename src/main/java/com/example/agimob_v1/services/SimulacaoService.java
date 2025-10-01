@@ -1,9 +1,6 @@
 package com.example.agimob_v1.services;
 
-import com.example.agimob_v1.dto.ParcelaDto;
-import com.example.agimob_v1.dto.SimulacaoRequestDto;
-import com.example.agimob_v1.dto.SimulacaoResponseDto;
-import com.example.agimob_v1.dto.UsuarioDto;
+import com.example.agimob_v1.dto.*;
 import com.example.agimob_v1.model.Simulacao;
 import com.example.agimob_v1.model.Taxa;
 import com.example.agimob_v1.model.Usuario;
@@ -16,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -54,24 +52,37 @@ public class SimulacaoService {
     }
 
     public SimulacaoResponseDto novaSimulacao(SimulacaoRequestDto simulacaoRequest) throws Exception {
+
         Usuario usuario = usuarioRepository.findByEmail(simulacaoRequest.getEmail()).orElseGet(() -> usuarioService.novoUsuario(simulacaoRequest));
 
         double valorFinanciamento = simulacaoRequest.getValorFinanciamento();
         double valorEntrada = simulacaoRequest.getValorEntrada();
         int prazo = prazoConvertido(simulacaoRequest);
+        double rendaUsuario = simulacaoRequest.getRendaUsuario();
+        double rendaPartcipante = simulacaoRequest.getRendaParticipante();
         Taxa taxa = taxaRepository.findVigenteByCodigo("AGIBANK", LocalDateTime.now()).orElseThrow();
         String tipoSimulacao = simulacaoRequest.getTipo();
 
-        Simulacao simulacao = new Simulacao(valorFinanciamento, valorEntrada, prazo, taxa, usuario);
+        Simulacao simulacao = new Simulacao(valorFinanciamento, valorEntrada, prazo, rendaUsuario, rendaPartcipante, taxa, usuario);
 
         simulacaoRepository.save(simulacao);
 
+        List<ParcelaDto> parcelas;
+        InformacoesAdicionaisDto informacoesAdicionais;
 
-        if (simulacaoRequest.getTipo().toUpperCase().equals("SAC")) {
-            return simulacaoResponseMapper.toSacResponseDto(tipoSimulacao, calculadoraSimulacaoService.sac(simulacao));
-        } else if (simulacaoRequest.getTipo().toUpperCase().equals("PRICE")) {
+        if (simulacaoRequest.getTipo().equalsIgnoreCase("SAC")) {
+
+            parcelas = calculadoraSimulacaoService.sac(simulacao);
+            informacoesAdicionais = calculadoraSimulacaoService.calcularInformacoesAdicionais(simulacao, parcelas);
+
+            return simulacaoResponseMapper.toSacResponseDto(tipoSimulacao, parcelas,informacoesAdicionais);
+
+        } else if (simulacaoRequest.getTipo().equalsIgnoreCase("PRICE")) {
+
             return simulacaoResponseMapper.toPriceResponseDto(tipoSimulacao, calculadoraSimulacaoService.price(simulacao));
-        } else if (simulacaoRequest.getTipo().toUpperCase().equals("AMBOS")) {
+
+        } else if (simulacaoRequest.getTipo().equalsIgnoreCase("AMBOS")) {
+
             return simulacaoResponseMapper.toAmbosResponseDto(simulacaoRequest.getTipo(), calculadoraSimulacaoService.sac(simulacao), calculadoraSimulacaoService.price(simulacao));
         }
 
@@ -80,6 +91,7 @@ public class SimulacaoService {
 
 
     public UsuarioDto listarSimulacoesPorUsuarioId(String email) {
+
     Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow();
 
     return usuarioDtoMapper.toDto(usuarioRepository.findByEmail(email).orElseThrow());
