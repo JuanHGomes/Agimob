@@ -5,7 +5,6 @@
     import com.example.agimob_v1.model.Simulacao;
     import org.springframework.stereotype.Service;
 
-    import javax.crypto.spec.OAEPParameterSpec;
     import java.util.ArrayList;
     import java.util.List;
 
@@ -34,6 +33,13 @@
             return simulacao.getRenda_usuario()+ simulacao.getRenda_participante();
         }
 
+        public double diferencaPriceSac(Simulacao simulacao){
+            double valorTotalSac = valorTotalFinanciamento(sac(simulacao));
+            double valorTotalPrice = valorTotalFinanciamento(price(simulacao));
+
+            return valorTotalPrice - valorTotalSac;
+        }
+
         public InformacoesAdicionaisDto calcularInformacoesAdicionais(Simulacao simulacao, List<ParcelaDto> parcelas){
 
             double primeiraParcela = valorPrimeiraParcela(parcelas);
@@ -41,9 +47,10 @@
             double valorTotalFinanciamento = parcelas.stream().mapToDouble(ParcelaDto::getValorTotalParcela).sum();
             double valorTotalJuros = valorTotalFinanciamento(parcelas);
             double rendaComprometida = rendaComprometida(simulacao, parcelas);
-            // FALTA DIFERENÇA PRICE - SAC
+            double diferencaPriceSac = diferencaPriceSac(simulacao);
 
-            return new InformacoesAdicionaisDto(primeiraParcela, ultimaParcela, valorTotalFinanciamento, valorTotalJuros, rendaComprometida);
+
+            return new InformacoesAdicionaisDto(primeiraParcela, ultimaParcela, valorTotalFinanciamento, valorTotalJuros, rendaComprometida, diferencaPriceSac);
 
         }
 

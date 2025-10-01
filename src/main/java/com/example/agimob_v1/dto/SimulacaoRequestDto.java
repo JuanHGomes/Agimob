@@ -9,14 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class SimulacaoRequestDto {
-    private double valorFinanciamento;
+    private double valorTotal;
     private double valorEntrada;
     private double rendaUsuario;
     private double rendaParticipante;
     private int prazo;
     private String email;
     private String tipo;
-
-
-
 }

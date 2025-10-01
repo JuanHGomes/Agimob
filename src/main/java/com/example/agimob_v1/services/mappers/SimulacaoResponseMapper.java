@@ -15,18 +15,21 @@ public interface SimulacaoResponseMapper {
     @Mapping(target = "tipo", source = "tipo")
     @Mapping(target = "parcelasSac", source = "parcelas")
     @Mapping(target = "parcelasPrice", ignore = true)
-    @Mapping(target = "informacoesAdicionais", source = "informacoesAdicionais")
+    @Mapping(target = "informacoesAdicionaisSac", source = "informacoesAdicionais")
     SimulacaoResponseDto toSacResponseDto(String tipo, List<ParcelaDto> parcelas, InformacoesAdicionaisDto informacoesAdicionais);
 
     // Método para o caso PRICE, com nomes mais claros
     @Mapping(target = "tipo", source = "tipo")
     @Mapping(target = "parcelasPrice", source = "parcelas")
     @Mapping(target = "parcelasSac", ignore = true)
-    SimulacaoResponseDto toPriceResponseDto(String tipo, List<ParcelaDto> parcelas);
+    @Mapping(target = "informacoesAdicionaisPrice", source = "informacoesAdicionais")
+    SimulacaoResponseDto toPriceResponseDto(String tipo, List<ParcelaDto> parcelas, InformacoesAdicionaisDto informacoesAdicionais);
 
     // Método para o caso AMBOS
     @Mapping(target = "tipo", source = "tipo")
     @Mapping(target = "parcelasSac", source = "parcelasSac")
     @Mapping(target = "parcelasPrice", source = "parcelasPrice")
-    SimulacaoResponseDto toAmbosResponseDto(String tipo, List<ParcelaDto> parcelasSac, List<ParcelaDto> parcelasPrice);
+    @Mapping(target = "informacoesAdicionaisSac", source = "informacoesAdicionaisSac")
+    @Mapping(target = "informacoesAdicionaisPrice", source = "informacoesAdicionaisPrice")
+    SimulacaoResponseDto toAmbosResponseDto(String tipo, List<ParcelaDto> parcelasSac, List<ParcelaDto> parcelasPrice, InformacoesAdicionaisDto informacoesAdicionaisSac, InformacoesAdicionaisDto informacoesAdicionaisPrice );
 }
