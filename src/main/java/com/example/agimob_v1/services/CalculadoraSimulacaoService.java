@@ -40,6 +40,16 @@
             return valorTotalPrice - valorTotalSac;
         }
 
+        public List<ParcelaDto> calcularPacelas(Simulacao simulacao){
+            if(simulacao.getTipo_modalidade().equalsIgnoreCase("SAC")){
+                return sac(simulacao);
+            }
+            else if(simulacao.getTipo_modalidade().equalsIgnoreCase("PRICE")){
+                return price(simulacao);
+            }
+            else if(simulacao.getTipo_modalidade().equalsIgnoreCase("AMBOS"))
+        }
+
         public InformacoesAdicionaisDto calcularInformacoesAdicionais(Simulacao simulacao, List<ParcelaDto> parcelas){
 
             double primeiraParcela = valorPrimeiraParcela(parcelas);

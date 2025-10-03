@@ -57,4 +57,22 @@ public class Simulacao {
         this.id_taxa = id_taxa;
         this.usuario = usuario;
     }
+
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("--- Detalhes da Simulação ---\n");
+        sb.append(String.format("ID: %d%n", this.id));
+        sb.append(String.format("Data: %s%n", this.data));
+        sb.append("----------------------------\n");
+        sb.append(String.format("Valor Financiado: R$ %s%n", this.valor_total));;
+        sb.append(String.format("Valor Entrada:    R$ %s%n", this.valor_entrada));
+        sb.append(String.format("Prazo Total:      %d meses%n", this.prazo));
+        sb.append("----------------------------");
+
+        return sb.toString();
+    }
 }
+

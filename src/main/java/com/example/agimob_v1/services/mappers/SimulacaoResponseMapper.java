@@ -16,6 +16,7 @@ public interface SimulacaoResponseMapper {
     @Mapping(target = "parcelasSac", source = "parcelas")
     @Mapping(target = "parcelasPrice", ignore = true)
     @Mapping(target = "informacoesAdicionaisSac", source = "informacoesAdicionais")
+    @Mapping(target = "informacoesAdicionaisPrice", ignore = true)
     SimulacaoResponseDto toSacResponseDto(String tipo, List<ParcelaDto> parcelas, InformacoesAdicionaisDto informacoesAdicionais);
 
     // Método para o caso PRICE, com nomes mais claros
@@ -23,6 +24,7 @@ public interface SimulacaoResponseMapper {
     @Mapping(target = "parcelasPrice", source = "parcelas")
     @Mapping(target = "parcelasSac", ignore = true)
     @Mapping(target = "informacoesAdicionaisPrice", source = "informacoesAdicionais")
+    @Mapping(target = "informacoesAdicionaisSac", ignore = true)
     SimulacaoResponseDto toPriceResponseDto(String tipo, List<ParcelaDto> parcelas, InformacoesAdicionaisDto informacoesAdicionais);
 
     // Método para o caso AMBOS

@@ -10,14 +10,15 @@ import com.example.agimob_v1.repository.UsuarioRepository;
 import com.example.agimob_v1.services.mappers.SimulacaoResponseMapper;
 import com.example.agimob_v1.services.mappers.UsuarioDtoMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SimulacaoService {
 
     private final SimulacaoRepository simulacaoRepository;
@@ -27,6 +28,7 @@ public class SimulacaoService {
     private final TaxaRepository taxaRepository;
     private final UsuarioDtoMapper usuarioDtoMapper;
     private final SimulacaoResponseMapper simulacaoResponseMapper;
+    private final EmailService emailService;
 
     public int prazoConvertido(SimulacaoRequestDto simulacaoRequest) {
         simulacaoRequest.setPrazo(simulacaoRequest.getPrazo() * 12);
@@ -60,7 +62,7 @@ public class SimulacaoService {
            List<ParcelaDto> parcelas = calculadoraSimulacaoService.sac(simulacao);
            InformacoesAdicionaisDto informacoesAdicionais = calculadoraSimulacaoService.calcularInformacoesAdicionais(simulacao, parcelas);
 
-            return simulacaoResponseMapper.toSacResponseDto(tipoSimulacao, parcelas,informacoesAdicionais);
+          return simulacaoResponseMapper.toSacResponseDto(tipoSimulacao, parcelas,informacoesAdicionais);
 
         } else if (simulacaoRequest.getTipo().equalsIgnoreCase("PRICE")) {
 
@@ -89,7 +91,7 @@ public class SimulacaoService {
 
     Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow();
 
-    return usuarioDtoMapper.toDto(usuarioRepository.findByEmail(email).orElseThrow());
+    return usuarioDtoMapper.toDto(usuario);
 
     }
 
