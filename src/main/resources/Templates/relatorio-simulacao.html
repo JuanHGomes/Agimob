@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${assunto}"></title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .parcela-table { width: 100%; border-collapse: collapse; }
+        .parcela-table th, .parcela-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+<h1 style="color: #0066cc;">Seu Resultado de Simulação</h1>
+
+<p>Obrigado por simular com o AGIMOB! Sua simulação do tipo <b><span th:text="${tipoSimulacao}"></span></b> foi concluída.</p>
+
+<h2>Detalhes da simulação</h2>
+<table class="parcela-table">
+    <thead>
+    <tr>
+        <th>Nº</th>
+        <th>Valor Total</th>
+        <th>Juros</th>
+        <th>Amortização</th>
+        <th>Saldo devedor</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="parcela : ${listaParcelas}">
+        <td th:text="${parcela.numeroParcela}">1</td>
+        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">1000.00</td>
+        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">250.00</td>
+        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">750.00</td>
+        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.getSaldoDevedor(), 0, 'COMMA', 2, 'POINT')}">750.00</td>
+    </tr>
+    </tbody>
+</table>
+
+<p><b> Para visualizar todas as parcelas da simulação faça o download do PDF em anexo!</b>></p>
+
+<p>Atenciosamente, <br/>Equipe Agimob.</p>
+</body>
+</html>

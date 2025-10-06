@@ -6,6 +6,7 @@ import com.example.agimob_v1.dto.UsuarioDto;
 import com.example.agimob_v1.model.Simulacao;
 import com.example.agimob_v1.services.EmailService;
 import com.example.agimob_v1.services.SimulacaoService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class SimulacaoController {
     }
 
     @PostMapping("/enviarSimulacao/{email}/{idSimulacao}")
-    public ResponseEntity<Void> enviarSimulacao(@PathVariable String email, @PathVariable Long idSimulacao){
+    public ResponseEntity<Void> enviarSimulacao(@PathVariable String email, @PathVariable Long idSimulacao) throws MessagingException {
         return emailService.enviarEmail(email, idSimulacao);
     }
 }
