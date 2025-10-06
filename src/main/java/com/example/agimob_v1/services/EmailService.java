@@ -33,7 +33,7 @@ public class EmailService {
         message.setFrom("agimobdasilva@gmail.com");
         message.setTo(to);
         message.setSubject("Simulacao "+ LocalDateTime.now());
-        message.setText(simulacao.toString());
+        message.setText(gerarCorpoEmail(simulacao));
         mailSender.send(message);
 
         return ResponseEntity.noContent().build();
@@ -41,18 +41,14 @@ public class EmailService {
 
     public String gerarCorpoEmail(Simulacao simulacao){
         StringBuilder sb = new StringBuilder();
-        List<ParcelaDto> pacelas = new ArrayList<>();
 
-        if(simulacao.getTipo_modalidade().equalsIgnoreCase("sac")){
-            pacelas = calculadoraSimulacao.sac(simulacao);
-        } else if (simulacao.getTipo_modalidade().equalsIgnoreCase("price")) {
-            pacelas = calculadoraSimulacao.sac(simulacao);
-        }
+        sb.append("Obrigado por simular pelo AGIMOB!");
+        sb.append("\n--------------------------------------");
+        sb.append("\nModalidade da simulação: "+simulacao.getTipo_modalidade());
+        sb.append("\nValor a ser financiado: "+simulacao.getValor_total());
+        sb.append("\nBaixe o PDF em anexo para visualizar todas as parcelas do periodo simulado!");
 
-        InformacoesAdicionaisDto infosAdicionais = calculadoraSimulacao.calcularInformacoesAdicionais(simulacao, pacelas);
-
-        sb.append("Modalidade da simulação: "+simulacao.getTipo_modalidade());
-        sb.append()
+        return sb.toString();
 
     }
 }

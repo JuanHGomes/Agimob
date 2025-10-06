@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class SimulacaoResponseDto {
+    private Long id;
     private String tipo;
     private List<ParcelaDto> parcelasSac;
     private InformacoesAdicionaisDto informacoesAdicionaisSac;

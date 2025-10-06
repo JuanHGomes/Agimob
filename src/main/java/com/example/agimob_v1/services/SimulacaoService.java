@@ -1,6 +1,7 @@
 package com.example.agimob_v1.services;
 
 import com.example.agimob_v1.dto.*;
+import com.example.agimob_v1.exceptions.ValorMenorIgualZeroException;
 import com.example.agimob_v1.model.Simulacao;
 import com.example.agimob_v1.model.Taxa;
 import com.example.agimob_v1.model.Usuario;
@@ -29,6 +30,7 @@ public class SimulacaoService {
     private final UsuarioDtoMapper usuarioDtoMapper;
     private final SimulacaoResponseMapper simulacaoResponseMapper;
     private final EmailService emailService;
+    private final String tipoTaxa = "AGIBANK";
 
     public int prazoConvertido(SimulacaoRequestDto simulacaoRequest) {
         simulacaoRequest.setPrazo(simulacaoRequest.getPrazo() * 12);
@@ -45,14 +47,17 @@ public class SimulacaoService {
         Usuario usuario = usuarioRepository.findByEmail(simulacaoRequest.getEmail()).orElseGet(() -> usuarioService.novoUsuario(simulacaoRequest));
 
         double valorFinanciamento = simulacaoRequest.getValorTotal();
+        if(valorFinanciamento <= 0){
+            throw new ValorMenorIgualZeroException("O valor do financiamento não pode ser menor ou igual a zero!");
+        }
         double valorEntrada = simulacaoRequest.getValorEntrada();
         int prazo = prazoConvertido(simulacaoRequest);
         double rendaUsuario = simulacaoRequest.getRendaUsuario();
         double rendaParticipante = simulacaoRequest.getRendaParticipante();
-        Taxa taxa = taxaRepository.findVigenteByCodigo("AGIBANK", LocalDateTime.now()).orElseThrow();
+        Taxa taxa = taxaRepository.findVigenteByCodigo(tipoTaxa, LocalDateTime.now()).orElseThrow();
         String tipoSimulacao = simulacaoRequest.getTipo();
 
-        Simulacao simulacao = new Simulacao(valorFinanciamento, valorEntrada, prazo, rendaUsuario, rendaParticipante, taxa, usuario);
+        Simulacao simulacao = new Simulacao(valorFinanciamento, valorEntrada, prazo, rendaUsuario, rendaParticipante, taxa, usuario, tipoSimulacao);
 
         simulacaoRepository.save(simulacao);
 
@@ -62,14 +67,14 @@ public class SimulacaoService {
            List<ParcelaDto> parcelas = calculadoraSimulacaoService.sac(simulacao);
            InformacoesAdicionaisDto informacoesAdicionais = calculadoraSimulacaoService.calcularInformacoesAdicionais(simulacao, parcelas);
 
-          return simulacaoResponseMapper.toSacResponseDto(tipoSimulacao, parcelas,informacoesAdicionais);
+          return simulacaoResponseMapper.toSacResponseDto(simulacao.getId(), tipoSimulacao, parcelas,informacoesAdicionais);
 
         } else if (simulacaoRequest.getTipo().equalsIgnoreCase("PRICE")) {
 
             List<ParcelaDto> parcelas = calculadoraSimulacaoService.price(simulacao);
             InformacoesAdicionaisDto informacoesAdicionais = calculadoraSimulacaoService.calcularInformacoesAdicionais(simulacao, parcelas);
 
-            return simulacaoResponseMapper.toPriceResponseDto(tipoSimulacao, parcelas,informacoesAdicionais);
+            return simulacaoResponseMapper.toPriceResponseDto(simulacao.getId(), tipoSimulacao, parcelas,informacoesAdicionais);
 
         } else if (simulacaoRequest.getTipo().equalsIgnoreCase("AMBOS")) {
 
@@ -79,7 +84,7 @@ public class SimulacaoService {
             InformacoesAdicionaisDto informacoesAdicionaisSac = calculadoraSimulacaoService.calcularInformacoesAdicionais(simulacao,parcelasSac);
             InformacoesAdicionaisDto informacoesAdicionaisPrice = calculadoraSimulacaoService.calcularInformacoesAdicionais(simulacao,parcelasPrice);
 
-            return simulacaoResponseMapper.toAmbosResponseDto(tipoSimulacao, parcelasSac, parcelasPrice, informacoesAdicionaisSac, informacoesAdicionaisPrice);
+            return simulacaoResponseMapper.toAmbosResponseDto(simulacao.getId(), tipoSimulacao, parcelasSac, parcelasPrice, informacoesAdicionaisSac, informacoesAdicionaisPrice);
 
         }
 
