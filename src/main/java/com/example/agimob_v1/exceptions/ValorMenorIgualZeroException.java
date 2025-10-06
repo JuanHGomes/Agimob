@@ -4,4 +4,7 @@ public class ValorMenorIgualZeroException extends RuntimeException {
   public ValorMenorIgualZeroException(String message) {
     super(message);
   }
-}
+  public ValorMenorIgualZeroException()
+  {
+   super("Valor inserido menor ou igual a zero!");
+  }}

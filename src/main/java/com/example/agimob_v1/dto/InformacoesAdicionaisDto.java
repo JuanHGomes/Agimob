@@ -4,5 +4,6 @@ public record InformacoesAdicionaisDto(double primeiraParcela,
                                        double ultimaParcela,
                                        double valorTotalFinanciamento,
                                        double valorTotalJuros,
-                                       double rendaComprometida) {
+                                       double rendaComprometida,
+                                       double diferencaPriceSac) {
 }
