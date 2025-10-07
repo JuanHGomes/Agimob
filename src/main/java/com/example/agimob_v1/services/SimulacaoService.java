@@ -2,6 +2,7 @@ package com.example.agimob_v1.services;
 
 import com.example.agimob_v1.dto.*;
 import com.example.agimob_v1.exceptions.FormatoIndevidoException;
+import com.example.agimob_v1.exceptions.ValorForaDaFaixaException;
 import com.example.agimob_v1.exceptions.ValorMenorIgualZeroException;
 import com.example.agimob_v1.model.Simulacao;
 import com.example.agimob_v1.model.Taxa;
@@ -99,7 +100,6 @@ public class SimulacaoService {
     }
 
     private void validarRequest(SimulacaoRequestDto request){
-        // INSERIR TAMBÉM EXEÇÕES PARA VALORES EXDRULOS COMO 100 ANOS... PARA NÃO QUEBRAR A MINHA API
 
         if(request.valorTotal() <=0){
             throw new ValorMenorIgualZeroException("O valor do financiamento não pode ser menor ou igual a ZERO!");
@@ -107,11 +107,11 @@ public class SimulacaoService {
         if(request.valorEntrada() <=0){
             throw new ValorMenorIgualZeroException("O valor do Valor de Entrada não pode ser menor ou igual a ZERO!");
         }
-        if(request.prazo() <=0){
-            throw new ValorMenorIgualZeroException("O Prazo não pode ser menor ou igual a ZERO!");
-        }
         if(!request.tipo().equalsIgnoreCase("SAC") && !request.tipo().equalsIgnoreCase("PRICE") && !request.tipo().equalsIgnoreCase("AMBOS")){
             throw new FormatoIndevidoException("Modalidade inserida inválida, as modadaliades válidas são: SAC, PRICE e AMBOS");
+        }
+        if(request.prazo() > 35 || request.prazo() < 1){
+            throw new ValorForaDaFaixaException("O Prazo precisa estar entre 1 e 35 anos!");
         }
 
     }

@@ -40,7 +40,7 @@ public class SimulacaoController {
     }
 
     @PostMapping("/enviarSimulacao/{email}/{idSimulacao}")
-    public ResponseEntity<Void> enviarSimulacao(@PathVariable String email, @PathVariable Long idSimulacao) throws MessagingException {
+    public ResponseEntity<Void> enviarSimulacao(@PathVariable String email, @PathVariable Long idSimulacao) throws Exception {
         return emailService.enviarEmail(email, idSimulacao);
     }
 }

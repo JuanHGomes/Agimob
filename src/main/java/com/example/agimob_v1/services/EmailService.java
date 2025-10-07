@@ -3,8 +3,12 @@ package com.example.agimob_v1.services;
 import com.example.agimob_v1.dto.InformacoesAdicionaisDto;
 import com.example.agimob_v1.dto.ParcelaDto;
 import com.example.agimob_v1.dto.SimulacaoResponseDto;
+import com.example.agimob_v1.exceptions.SimulacaoNaoEncontradaException;
+import com.example.agimob_v1.exceptions.UsuarioNaoEncontradoException;
 import com.example.agimob_v1.model.Simulacao;
+import com.example.agimob_v1.model.Usuario;
 import com.example.agimob_v1.repository.SimulacaoRepository;
+import com.example.agimob_v1.repository.UsuarioRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -34,13 +38,15 @@ public class EmailService {
     private final TemplateEngine templateEngine;
     private final SimulacaoRepository simulacaoRepository;
     private final CalculadoraSimulacaoService calculadoraSimulacao;
+    private final UsuarioRepository usuarioRepository;
 
-    public ResponseEntity<Void> enviarEmail(String to, Long idSimulacao) throws MessagingException {
+    public ResponseEntity<Void> enviarEmail(String to, Long idSimulacao) throws Exception {
         MimeMessage message = mailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        Simulacao simulacao = simulacaoRepository.findById(idSimulacao).orElseThrow();
+        Simulacao simulacao = simulacaoRepository.findById(idSimulacao).orElseThrow(() -> new SimulacaoNaoEncontradaException("Não foi possível localizar nenhuma simulação com esse ID..."));
+        Usuario usuario = usuarioRepository.findByEmail(to).orElseThrow(() -> new UsuarioNaoEncontradoException("Não foi possível localizar nehum usuário com esse ID..."));
 
         String corpoEmail = gerarHtml(simulacao);
 
