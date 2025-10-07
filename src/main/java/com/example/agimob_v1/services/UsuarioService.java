@@ -1,6 +1,7 @@
 package com.example.agimob_v1.services;
 
 import com.example.agimob_v1.dto.SimulacaoRequestDto;
+import com.example.agimob_v1.exceptions.UsuarioNaoEncontradoException;
 import com.example.agimob_v1.model.Usuario;
 import com.example.agimob_v1.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,11 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public Usuario novoUsuario(SimulacaoRequestDto simulacaoRequest){
-        return usuarioRepository.save(new Usuario(simulacaoRequest.email()));
+    public Usuario novoUsuario(String emailUsuario){
+        return usuarioRepository.save(new Usuario(emailUsuario));
+    }
+
+    public Usuario validarUsuario(String emailUsuario){
+        return usuarioRepository.findByEmail(emailUsuario).orElseGet(() -> novoUsuario(emailUsuario));
     }
 }

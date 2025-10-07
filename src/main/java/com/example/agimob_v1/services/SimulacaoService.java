@@ -2,6 +2,7 @@ package com.example.agimob_v1.services;
 
 import com.example.agimob_v1.dto.*;
 import com.example.agimob_v1.exceptions.FormatoIndevidoException;
+import com.example.agimob_v1.exceptions.SimulacaoNaoEncontradaException;
 import com.example.agimob_v1.exceptions.ValorForaDaFaixaException;
 import com.example.agimob_v1.exceptions.ValorMenorIgualZeroException;
 import com.example.agimob_v1.model.Simulacao;
@@ -25,13 +26,9 @@ import java.util.List;
 public class SimulacaoService {
 
     private final SimulacaoRepository simulacaoRepository;
-    private final UsuarioRepository usuarioRepository;
-    private final UsuarioService usuarioService;
     private final CalculadoraSimulacaoService calculadoraSimulacaoService;
     private final TaxaRepository taxaRepository;
-    private final UsuarioDtoMapper usuarioDtoMapper;
     private final SimulacaoResponseMapper simulacaoResponseMapper;
-    private final EmailService emailService;
     private final String tipoTaxa = "AGIBANK";
 
     public int prazoConvertido(SimulacaoRequestDto simulacaoRequest) {
@@ -46,8 +43,6 @@ public class SimulacaoService {
 
         validarRequest(simulacaoRequest);
 
-        Usuario usuario = usuarioRepository.findByEmail(simulacaoRequest.email()).orElseGet(() -> usuarioService.novoUsuario(simulacaoRequest));
-
         double valorFinanciamento = simulacaoRequest.valorTotal();
         double valorEntrada = simulacaoRequest.valorEntrada();
         int prazo = prazoConvertido(simulacaoRequest);
@@ -56,7 +51,7 @@ public class SimulacaoService {
         Taxa taxa = taxaRepository.findVigenteByCodigo(tipoTaxa, LocalDateTime.now()).orElseThrow();
         String tipoSimulacao = simulacaoRequest.tipo();
 
-        Simulacao simulacao = new Simulacao(valorFinanciamento, valorEntrada, prazo, rendaUsuario, rendaParticipante, taxa, usuario, tipoSimulacao);
+        Simulacao simulacao = new Simulacao(valorFinanciamento, valorEntrada, prazo, rendaUsuario, rendaParticipante, taxa, tipoSimulacao);
 
         simulacaoRepository.save(simulacao);
 
@@ -91,14 +86,6 @@ public class SimulacaoService {
     }
 
 
-    public UsuarioDto listarSimulacoesPorUsuarioId(String email) {
-
-    Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow();
-
-    return usuarioDtoMapper.toDto(usuario);
-
-    }
-
     private void validarRequest(SimulacaoRequestDto request){
 
         if(request.valorTotal() <=0){
@@ -114,6 +101,19 @@ public class SimulacaoService {
             throw new ValorForaDaFaixaException("O Prazo precisa estar entre 1 e 35 anos!");
         }
 
+    }
+
+    public Simulacao localizarSimulacao(Long idSimulacao){
+       return simulacaoRepository.findById(idSimulacao).orElseThrow(() -> new SimulacaoNaoEncontradaException("A simulação com o ID "+idSimulacao+" não foi localizada..."));
+    }
+
+    public void setUsuarioSimulacao(Usuario usuario, Long idSimulacao){
+
+        Simulacao simulacao = localizarSimulacao(idSimulacao);
+
+        simulacao.setUsuario(usuario);
+
+       simulacaoRepository.save(simulacao);
     }
 
 }

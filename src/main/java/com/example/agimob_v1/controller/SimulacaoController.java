@@ -34,11 +34,6 @@ public class SimulacaoController {
         return simulacaoService.novaSimulacao(simulacaoRequestDto);
     }
 
-    @GetMapping("/{email}")
-    public UsuarioDto simulacoesPorUsuario(@PathVariable String email){
-       return simulacaoService.listarSimulacoesPorUsuarioId(email);
-    }
-
     @PostMapping("/enviarSimulacao/{email}/{idSimulacao}")
     public ResponseEntity<Void> enviarSimulacao(@PathVariable String email, @PathVariable Long idSimulacao) throws Exception {
         return emailService.enviarEmail(email, idSimulacao);

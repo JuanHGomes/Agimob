@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface SimulacaoResponseMapper {
 
-    // Método para o caso SAC, com nomes mais claros
+
     @Mapping(target = "id", source = "id")
     @Mapping(target = "tipo", source = "tipo")
     @Mapping(target = "parcelasSac", source = "parcelas")
@@ -20,7 +20,7 @@ public interface SimulacaoResponseMapper {
     @Mapping(target = "informacoesAdicionaisPrice", ignore = true)
     SimulacaoResponseDto toSacResponseDto(Long id, String tipo, List<ParcelaDto> parcelas, InformacoesAdicionaisDto informacoesAdicionais);
 
-    // Método para o caso PRICE, com nomes mais claros
+
     @Mapping(target = "id", source = "id")
     @Mapping(target = "tipo", source = "tipo")
     @Mapping(target = "parcelasPrice", source = "parcelas")
@@ -29,7 +29,7 @@ public interface SimulacaoResponseMapper {
     @Mapping(target = "informacoesAdicionaisSac", ignore = true)
     SimulacaoResponseDto toPriceResponseDto(Long id, String tipo, List<ParcelaDto> parcelas, InformacoesAdicionaisDto informacoesAdicionais);
 
-    // Método para o caso AMBOS
+
     @Mapping(target = "id", source = "id")
     @Mapping(target = "tipo", source = "tipo")
     @Mapping(target = "parcelasSac", source = "parcelasSac")

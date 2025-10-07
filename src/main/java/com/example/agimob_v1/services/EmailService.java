@@ -36,22 +36,26 @@ import java.util.stream.Collectors;
 public class EmailService {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    private final SimulacaoRepository simulacaoRepository;
     private final CalculadoraSimulacaoService calculadoraSimulacao;
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
+    private final SimulacaoService simulacaoService;
 
-    public ResponseEntity<Void> enviarEmail(String to, Long idSimulacao) throws Exception {
+    public ResponseEntity<Void> enviarEmail(String emailUsuario, Long idSimulacao) throws Exception {
+
+        Usuario usuario = usuarioService.validarUsuario(emailUsuario);
+
+        Simulacao simulacao = simulacaoService.localizarSimulacao(idSimulacao);
+
+        simulacaoService.setUsuarioSimulacao(usuario, idSimulacao);
+
         MimeMessage message = mailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        Simulacao simulacao = simulacaoRepository.findById(idSimulacao).orElseThrow(() -> new SimulacaoNaoEncontradaException("Não foi possível localizar nenhuma simulação com esse ID..."));
-        Usuario usuario = usuarioRepository.findByEmail(to).orElseThrow(() -> new UsuarioNaoEncontradoException("Não foi possível localizar nehum usuário com esse ID..."));
-
         String corpoEmail = gerarHtml(simulacao);
 
         helper.setFrom("agimobdasilva@gmail.com");
-        helper.setTo(to);
+        helper.setTo(emailUsuario);
         helper.setSubject("Simulacao AGIMOB "+ formatarData(LocalDateTime.now()));
         helper.setText(corpoEmail, true);
         mailSender.send(message);
