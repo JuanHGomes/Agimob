@@ -21,6 +21,6 @@ public class UsuarioService {
     }
 
     public Usuario novoUsuario(SimulacaoRequestDto simulacaoRequest){
-        return usuarioRepository.save(new Usuario(simulacaoRequest.getEmail()));
+        return usuarioRepository.save(new Usuario(simulacaoRequest.email()));
     }
 }
