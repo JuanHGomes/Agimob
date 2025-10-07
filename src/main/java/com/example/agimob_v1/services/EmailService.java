@@ -11,6 +11,7 @@ import com.example.agimob_v1.repository.SimulacaoRepository;
 import com.example.agimob_v1.repository.UsuarioRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.util.ByteArrayDataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,7 @@ public class EmailService {
     private final CalculadoraSimulacaoService calculadoraSimulacao;
     private final UsuarioService usuarioService;
     private final SimulacaoService simulacaoService;
+    private final PdfService pdfService;
 
     public ResponseEntity<Void> enviarEmail(String emailUsuario, Long idSimulacao) throws Exception {
 
@@ -49,15 +51,16 @@ public class EmailService {
         simulacaoService.setUsuarioSimulacao(usuario, idSimulacao);
 
         MimeMessage message = mailSender.createMimeMessage();
-
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         String corpoEmail = gerarHtml(simulacao);
 
         helper.setFrom("agimobdasilva@gmail.com");
         helper.setTo(emailUsuario);
-        helper.setSubject("Simulacao AGIMOB "+ formatarData(LocalDateTime.now()));
+        helper.setSubject("Simulação AGIMOB "+ formatarData(LocalDateTime.now()));
         helper.setText(corpoEmail, true);
+        helper.addAttachment("Simulação AGIMOB", new ByteArrayDataSource(pdfService.gerarRelatorioPdf(simulacao), "application/pdf"));
+
         mailSender.send(message);
 
         return ResponseEntity.noContent().build();
@@ -73,7 +76,7 @@ public class EmailService {
         context.setVariable("tipoSimulacao", simulacao.getTipo_modalidade().toUpperCase());
         context.setVariable("listaParcelas", dezPrimeirasParcelas);
 
-        return templateEngine.process("relatorio-simulacao", context);
+        return templateEngine.process("relatorio-simulacao-email", context);
     }
 
     private String formatarData(LocalDateTime data){
