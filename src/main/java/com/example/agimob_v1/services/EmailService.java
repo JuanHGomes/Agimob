@@ -3,52 +3,85 @@ package com.example.agimob_v1.services;
 import com.example.agimob_v1.dto.InformacoesAdicionaisDto;
 import com.example.agimob_v1.dto.ParcelaDto;
 import com.example.agimob_v1.dto.SimulacaoResponseDto;
+import com.example.agimob_v1.exceptions.SimulacaoNaoEncontradaException;
+import com.example.agimob_v1.exceptions.UsuarioNaoEncontradoException;
 import com.example.agimob_v1.model.Simulacao;
+import com.example.agimob_v1.model.Usuario;
 import com.example.agimob_v1.repository.SimulacaoRepository;
+import com.example.agimob_v1.repository.UsuarioRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.util.ByteArrayDataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.function.EntityResponse;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 import org.xml.sax.EntityResolver;
 
 import javax.swing.text.html.parser.Entity;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender mailSender;
-    private final SimulacaoRepository simulacaoRepository;
+    private final TemplateEngine templateEngine;
     private final CalculadoraSimulacaoService calculadoraSimulacao;
+    private final UsuarioService usuarioService;
+    private final SimulacaoService simulacaoService;
+    private final PdfService pdfService;
 
-    public ResponseEntity<Void> enviarEmail(String to, Long idSimulacao){
-        SimpleMailMessage message = new SimpleMailMessage();
-        Simulacao simulacao = simulacaoRepository.findById(idSimulacao).orElseThrow();
+    public ResponseEntity<Void> enviarEmail(String emailUsuario, Long idSimulacao) throws Exception {
 
-        message.setFrom("agimobdasilva@gmail.com");
-        message.setTo(to);
-        message.setSubject("Simulacao "+ LocalDateTime.now());
-        message.setText(gerarCorpoEmail(simulacao));
+        Usuario usuario = usuarioService.validarUsuario(emailUsuario);
+
+        Simulacao simulacao = simulacaoService.localizarSimulacao(idSimulacao);
+
+        simulacaoService.setUsuarioSimulacao(usuario, idSimulacao);
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        String corpoEmail = gerarHtml(simulacao);
+
+        helper.setFrom("agimobdasilva@gmail.com");
+        helper.setTo(emailUsuario);
+        helper.setSubject("Simulação AGIMOB "+ formatarData(LocalDateTime.now()));
+        helper.setText(corpoEmail, true);
+        helper.addAttachment("Simulação AGIMOB", new ByteArrayDataSource(pdfService.gerarRelatorioPdf(simulacao), "application/pdf"));
+
         mailSender.send(message);
 
         return ResponseEntity.noContent().build();
     }
 
-    public String gerarCorpoEmail(Simulacao simulacao){
-        StringBuilder sb = new StringBuilder();
+    private String gerarHtml(Simulacao simulacao){
 
-        sb.append("Obrigado por simular pelo AGIMOB!");
-        sb.append("\n--------------------------------------");
-        sb.append("\nModalidade da simulação: "+simulacao.getTipo_modalidade());
-        sb.append("\nValor a ser financiado: "+simulacao.getValor_total());
-        sb.append("\nBaixe o PDF em anexo para visualizar todas as parcelas do periodo simulado!");
+        List<ParcelaDto> dezPrimeirasParcelas = calculadoraSimulacao.sac(simulacao).stream().limit(10).toList();
 
-        return sb.toString();
 
+        Context context = new Context();
+        context.setVariable("assunto", "Relatório de Simulacão");
+        context.setVariable("tipoSimulacao", simulacao.getTipo_modalidade().toUpperCase());
+        context.setVariable("listaParcelas", dezPrimeirasParcelas);
+
+        return templateEngine.process("relatorio-simulacao-email", context);
     }
+
+    private String formatarData(LocalDateTime data){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return data.format(formatter);
+    }
+
 }

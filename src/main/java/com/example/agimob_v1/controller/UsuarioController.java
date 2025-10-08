@@ -15,7 +15,7 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    public Usuario novoUsuario(SimulacaoRequestDto simulacaoRequestDto){
-        return usuarioService.novoUsuario(simulacaoRequestDto);
+    public Usuario novoUsuario(String emailUsuario){
+        return usuarioService.novoUsuario(emailUsuario);
     }
 }

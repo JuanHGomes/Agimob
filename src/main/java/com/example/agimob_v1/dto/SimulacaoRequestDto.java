@@ -5,15 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class SimulacaoRequestDto {
-    private double valorTotal;
-    private double valorEntrada;
-    private double rendaUsuario;
-    private double rendaParticipante;
-    private int prazo;
-    private String email;
-    private String tipo;
+
+public record SimulacaoRequestDto (
+         double valorTotal,
+         double valorEntrada,
+         double rendaUsuario,
+         double rendaParticipante,
+         int prazo,
+         String tipo){
+
 }

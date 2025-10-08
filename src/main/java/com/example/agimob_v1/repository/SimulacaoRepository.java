@@ -11,4 +11,6 @@ import java.util.Optional;
 
 public interface SimulacaoRepository extends JpaRepository<Simulacao, Long> {
     Optional<List<Simulacao>> findByUsuario(Usuario usuario);
+
+    Long id(Long id);
 }

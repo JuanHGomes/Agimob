@@ -119,22 +119,6 @@
             return parcelas;
 
         }
-
-
-        public SimulacaoAgibankResponseDto agibank(Simulacao simulacao){
-            int prazo = simulacao.getPrazo();
-            double juros = simulacao.getId_taxa().getValor_taxa();
-
-            double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
-            double amortizacao = saldoDevedor/prazo;
-            double valorJurosParcela = saldoDevedor * juros;
-            double valorTotalParcela = amortizacao + valorJurosParcela;
-
-            double valorTotalFinanciamento = price(simulacao).stream().mapToDouble(ParcelaDto::getValorTotalParcela).sum();
-            double valorTotalJuros = price(simulacao).stream().mapToDouble(ParcelaDto::getValorJurosParcela).sum();
-
-
-            return new SimulacaoAgibankResponseDto(valorJurosParcela,valorTotalFinanciamento,valorTotalJuros);
-        }
+        
 
     }

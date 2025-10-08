@@ -38,6 +38,11 @@ dependencies {
 	annotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
 	annotationProcessor ("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 	implementation ("org.springframework.boot:spring-boot-starter-mail")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.5.6")
+	implementation ("org.springframework.boot:spring-boot-starter-aop")
+	implementation ("com.github.librepdf:openpdf:1.3.30")
+	implementation("com.github.librepdf:openpdf:3.0.0")
+	implementation("org.xhtmlrenderer:flying-saucer-pdf:10.0.0")
 }
 
 tasks.withType<Test> {
