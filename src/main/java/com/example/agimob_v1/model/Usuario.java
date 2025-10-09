@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Usuario {
+public class rv dUsuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
