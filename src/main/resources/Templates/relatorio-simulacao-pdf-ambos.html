@@ -13,7 +13,7 @@
 
 <p>Obrigado por simular com o AGIMOB! Sua simulação do tipo <b><span th:text="${tipoSimulacao}"></span></b> foi concluída.</p>
 
-<h2>Detalhes da simulação</h2>
+<h2>Detalhes da simulação - Modalidade SAC</h2>
 <table class="parcela-table">
     <thead>
     <tr>
@@ -25,7 +25,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="parcela : ${listaParcelas}">
+    <tr th:each="parcela : ${listaParcelasSac}">
         <td th:text="${parcela.numeroParcela}">1</td>
         <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">1000.00</td>
         <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">250.00</td>
@@ -34,7 +34,27 @@
     </tr>
     </tbody>
 </table>
-
+<h2>Detalhes da simulação - Modalidade PRICE</h2>
+<table class="parcela-table">
+    <thead>
+    <tr>
+        <th>Nº</th>
+        <th>Valor Total</th>
+        <th>Juros</th>
+        <th>Amortização</th>
+        <th>Saldo devedor</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="parcela : ${listaParcelasPrice}">
+        <td th:text="${parcela.numeroParcela}">1</td>
+        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">1000.00</td>
+        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">250.00</td>
+        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">750.00</td>
+        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.getSaldoDevedor(), 0, 'COMMA', 2, 'POINT')}">750.00</td>
+    </tr>
+    </tbody>
+</table>
 <p>Atenciosamente, <br/>Equipe Agimob.</p>
 </body>
 </html>

@@ -5,6 +5,7 @@ import com.example.agimob_v1.dto.SimulacaoResponseDto;
 import com.example.agimob_v1.dto.UsuarioDto;
 import com.example.agimob_v1.model.Simulacao;
 import com.example.agimob_v1.services.EmailService;
+import com.example.agimob_v1.services.PdfService;
 import com.example.agimob_v1.services.SimulacaoService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class SimulacaoController {
 
     private final SimulacaoService simulacaoService;
     private final EmailService emailService;
+    private final PdfService pdfService;
 
 
     @GetMapping
@@ -37,5 +39,10 @@ public class SimulacaoController {
     @PostMapping("/enviarSimulacao/{email}/{idSimulacao}")
     public ResponseEntity<Void> enviarSimulacao(@PathVariable String email, @PathVariable Long idSimulacao) throws Exception {
         return emailService.enviarEmail(email, idSimulacao);
+    }
+
+    @PostMapping("/baixarSimulacao/{idSimulacao}")
+    public ResponseEntity<byte[]> baixarSimulacao(@PathVariable Long idSimulacao) {
+        return pdfService.baixarPdf(idSimulacao);
     }
 }

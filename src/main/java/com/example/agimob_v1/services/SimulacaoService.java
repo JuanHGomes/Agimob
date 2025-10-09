@@ -55,33 +55,7 @@ public class SimulacaoService {
 
         simulacaoRepository.save(simulacao);
 
-
-        if (simulacaoRequest.tipo().equalsIgnoreCase("SAC")) {
-
-           List<ParcelaDto> parcelas = calculadoraSimulacaoService.sac(simulacao);
-           InformacoesAdicionaisDto informacoesAdicionais = calculadoraSimulacaoService.calcularInformacoesAdicionais(simulacao, parcelas);
-
-          return simulacaoResponseMapper.toSacResponseDto(simulacao.getId(), tipoSimulacao, parcelas,informacoesAdicionais);
-
-        } else if (simulacaoRequest.tipo().equalsIgnoreCase("PRICE")) {
-
-            List<ParcelaDto> parcelas = calculadoraSimulacaoService.price(simulacao);
-            InformacoesAdicionaisDto informacoesAdicionais = calculadoraSimulacaoService.calcularInformacoesAdicionais(simulacao, parcelas);
-
-            return simulacaoResponseMapper.toPriceResponseDto(simulacao.getId(), tipoSimulacao, parcelas,informacoesAdicionais);
-
-        } else{
-
-            List<ParcelaDto> parcelasSac = calculadoraSimulacaoService.sac(simulacao);
-            List<ParcelaDto> parcelasPrice = calculadoraSimulacaoService.price(simulacao);
-
-            InformacoesAdicionaisDto informacoesAdicionaisSac = calculadoraSimulacaoService.calcularInformacoesAdicionais(simulacao,parcelasSac);
-            InformacoesAdicionaisDto informacoesAdicionaisPrice = calculadoraSimulacaoService.calcularInformacoesAdicionais(simulacao,parcelasPrice);
-
-            return simulacaoResponseMapper.toAmbosResponseDto(simulacao.getId(), tipoSimulacao, parcelasSac, parcelasPrice, informacoesAdicionaisSac, informacoesAdicionaisPrice);
-
-        }
-
+        return calculadoraSimulacaoService.calcularParcelas(simulacao);
 
     }
 
