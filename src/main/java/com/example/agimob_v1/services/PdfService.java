@@ -18,12 +18,12 @@ import java.util.List;
 public class PdfService {
 
     private final TemplateEngine templateEngine;
-    private final CalculadoraSimulacaoService calculadoraSimulacaoService;
+    private final CalculadoraSimulacaoService calculadoraSimulacao;
 
 
     public byte[] gerarRelatorioPdf(Simulacao simulacao){
 
-            String corpoPdf = gerarHtml(simulacao);
+            String corpoPdf = gerarCorpoRelatorioPdf(simulacao);
 
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ITextRenderer renderer = new ITextRenderer();
@@ -36,17 +36,53 @@ public class PdfService {
 
     }
 
-    private String gerarHtml(Simulacao simulacao){
+    private String gerarCorpoRelatorioPdf(Simulacao simulacao){
 
-        List<ParcelaDto> dezPrimeirasParcelas = calculadoraSimulacaoService.sac(simulacao).stream().limit(10).toList();
+        String modalidade = simulacao.getTipo_modalidade();
 
+        if(modalidade.equalsIgnoreCase("SAC")){
+            List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getParcelasSac();
+
+            return gerarHtmlSacOuPrice(simulacao.getTipo_modalidade(), parcelasSac);
+        }
+        else if(modalidade.equalsIgnoreCase("PRICE")){
+            List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getParcelasPrice();
+
+            return gerarHtmlSacOuPrice(simulacao.getTipo_modalidade(), parcelasPrice);
+        }
+        List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getParcelasSac();
+        List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getParcelasPrice();
+
+        return gerarHtmlSacEPrice(modalidade, parcelasSac, parcelasPrice);
+
+    }
+
+
+    private String gerarHtmlSacOuPrice(String modalidade, List<ParcelaDto> parcelas) {
+
+        List<ParcelaDto> dezPrimeirasParcelas = parcelas.stream().limit(10).toList();
 
         Context context = new Context();
         context.setVariable("assunto", "Relatório de Simulacão");
-        context.setVariable("tipoSimulacao", simulacao.getTipo_modalidade().toUpperCase());
+        context.setVariable("tipoSimulacao", modalidade.toUpperCase());
         context.setVariable("listaParcelas", dezPrimeirasParcelas);
 
-        return templateEngine.process("relatorio-simulacao-pdf", context);
+        return templateEngine.process("relatorio-simulacao-email", context);
+    }
+
+    private String gerarHtmlSacEPrice(String
+                                              modalidade, List<ParcelaDto> parcelasSac, List<ParcelaDto> parcelasPrice) {
+
+        List<ParcelaDto> dezPrimeirasParcelasSac = parcelasSac.stream().limit(10).toList();
+        List<ParcelaDto> dezPrimeirasParcelasPrice = parcelasPrice.stream().limit(10).toList();
+
+        Context context = new Context();
+        context.setVariable("assunto", "Relatório de Simulacão");
+        context.setVariable("tipoSimulacao", modalidade.toUpperCase());
+        context.setVariable("listaParcelasSac", dezPrimeirasParcelasSac);
+        context.setVariable("listaParcelasPrice", dezPrimeirasParcelasPrice);
+
+        return templateEngine.process("relatorio-simulacao-email-ambos", context);
     }
 
 }
