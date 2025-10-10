@@ -3,18 +3,14 @@ package com.example.agimob_v1.controller;
 import com.example.agimob_v1.dto.ScoreDto;
 import com.example.agimob_v1.dto.SimulacaoRequestDto;
 import com.example.agimob_v1.dto.SimulacaoResponseDto;
-import com.example.agimob_v1.dto.UsuarioDto;
 import com.example.agimob_v1.model.Simulacao;
 import com.example.agimob_v1.services.EmailService;
 import com.example.agimob_v1.services.PdfService;
 import com.example.agimob_v1.services.ScoreApiService;
 import com.example.agimob_v1.services.SimulacaoService;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.EntityResponse;
 
 import java.util.List;
 

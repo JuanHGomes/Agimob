@@ -10,9 +10,7 @@ import com.example.agimob_v1.model.Taxa;
 import com.example.agimob_v1.model.Usuario;
 import com.example.agimob_v1.repository.SimulacaoRepository;
 import com.example.agimob_v1.repository.TaxaRepository;
-import com.example.agimob_v1.repository.UsuarioRepository;
 import com.example.agimob_v1.services.mappers.SimulacaoResponseMapper;
-import com.example.agimob_v1.services.mappers.UsuarioDtoMapper;
 
 
 import lombok.RequiredArgsConstructor;
