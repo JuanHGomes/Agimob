@@ -1,11 +1,13 @@
 package com.example.agimob_v1.controller;
 
+import com.example.agimob_v1.dto.ScoreDto;
 import com.example.agimob_v1.dto.SimulacaoRequestDto;
 import com.example.agimob_v1.dto.SimulacaoResponseDto;
 import com.example.agimob_v1.dto.UsuarioDto;
 import com.example.agimob_v1.model.Simulacao;
 import com.example.agimob_v1.services.EmailService;
 import com.example.agimob_v1.services.PdfService;
+import com.example.agimob_v1.services.ScoreApiService;
 import com.example.agimob_v1.services.SimulacaoService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class SimulacaoController {
     private final SimulacaoService simulacaoService;
     private final EmailService emailService;
     private final PdfService pdfService;
+    private final ScoreApiService scoreApiService;
 
 
     @GetMapping
@@ -44,5 +47,10 @@ public class SimulacaoController {
     @PostMapping("/baixarSimulacao/{idSimulacao}")
     public ResponseEntity<byte[]> baixarSimulacao(@PathVariable Long idSimulacao) {
         return pdfService.baixarPdf(idSimulacao);
+    }
+
+    @GetMapping("/scoreApi/{id}")
+    public ResponseEntity<ScoreDto> score(String cpf){
+        return scoreApiService.consultarScore(cpf);
     }
 }
