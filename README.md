@@ -70,8 +70,8 @@ O usuário pode efetuar simulações completas baseadas nas seguintes entradas:
 * **Prazo Máximo:** 420 meses (35 anos).
 * **Prazo Mínimo:** 380 meses (31 anos).
 * **Taxas de Juros:**
-    * **AgiBank:** 9%
-    * **Baseado no Score:** 12%
+    * **AgiBank:** 9% **(Sobre variação atráves do consumo de API do Score do Usuário)**
+  
 
 #### Saídas para o Usuário
 
