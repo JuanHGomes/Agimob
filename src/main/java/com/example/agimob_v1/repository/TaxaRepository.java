@@ -12,4 +12,7 @@ public interface TaxaRepository extends JpaRepository<Taxa, Long> {
 
     @Query("SELECT t FROM Taxa t WHERE t.codigo = :codigo AND t.dataFim >= :dataAtual ")
     Optional<Taxa> findVigenteByCodigo(@Param("codigo") String codigo, @Param("dataAtual") LocalDateTime dataAtual );
+
+    @Query("SELECT t FROM Taxa t WHERE t.risco = :risco AND t.dataFim >= :dataAtual ")
+    Optional<Taxa> findVigenteByRisco(@Param("risco") String risco, @Param("dataAtual") LocalDateTime dataAtual );
 }

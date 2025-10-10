@@ -35,7 +35,7 @@ public class SimulacaoController {
         return simulacaoService.novaSimulacao(simulacaoRequestDto);
     }
 
-    @PostMapping("/enviarSimulacao/{email}/{idSimulacao}")
+    @PostMapping("/enviarSimulacao/{emailUsuario}/{idSimulacao}")
     public ResponseEntity<Void> enviarSimulacao(@PathVariable String email, @PathVariable Long idSimulacao) throws Exception {
         return emailService.enviarEmail(email, idSimulacao);
     }
@@ -49,4 +49,5 @@ public class SimulacaoController {
     public ResponseEntity<ScoreDto> score(String cpf){
         return scoreApiService.consultarScore(cpf);
     }
+
 }

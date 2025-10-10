@@ -14,6 +14,7 @@ import com.example.agimob_v1.services.mappers.SimulacaoResponseMapper;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,9 @@ public class SimulacaoService {
     private final CalculadoraSimulacaoService calculadoraSimulacaoService;
     private final TaxaRepository taxaRepository;
     private final SimulacaoResponseMapper simulacaoResponseMapper;
-    private final String tipoTaxa = "AGIBANK";
+    private final UsuarioService usuarioService;
+    private final TaxaService taxaService;
+    private final String taxaPadrao = "AGIBANK";
 
     public int prazoConvertido(SimulacaoRequestDto simulacaoRequest) {
         return simulacaoRequest.prazo()*12;
@@ -41,12 +44,26 @@ public class SimulacaoService {
 
         validarRequest(simulacaoRequest);
 
+        boolean clienteAgi =  usuarioService.validarSeClienteAgi(simulacaoRequest.emailUsuario(), simulacaoRequest.cpfUsuario());
+
+        Taxa taxa;
+
+        if(clienteAgi){
+          taxa = taxaService.determinarTaxaPorScore(simulacaoRequest.cpfUsuario());
+        }
+        else{
+            taxa = taxaRepository.findVigenteByCodigo(taxaPadrao, LocalDateTime.now()).orElseThrow();
+        }
+
         double valorFinanciamento = simulacaoRequest.valorTotal();
         double valorEntrada = simulacaoRequest.valorEntrada();
         int prazo = prazoConvertido(simulacaoRequest);
         double rendaUsuario = simulacaoRequest.rendaUsuario();
         double rendaParticipante = simulacaoRequest.rendaParticipante();
-        Taxa taxa = taxaRepository.findVigenteByCodigo(tipoTaxa, LocalDateTime.now()).orElseThrow();
+
+
+
+
         String tipoSimulacao = simulacaoRequest.tipo();
 
         Simulacao simulacao = new Simulacao(valorFinanciamento, valorEntrada, prazo, rendaUsuario, rendaParticipante, taxa, tipoSimulacao);

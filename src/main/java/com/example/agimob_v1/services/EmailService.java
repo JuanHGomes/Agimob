@@ -97,7 +97,7 @@ public class EmailService {
         context.setVariable("tipoSimulacao", modalidade.toUpperCase());
         context.setVariable("listaParcelas", dezPrimeirasParcelas);
 
-        return templateEngine.process("relatorio-simulacao-email", context);
+        return templateEngine.process("relatorio-simulacao-emailUsuario", context);
     }
 
     private String gerarHtmlSacEPrice(String
@@ -112,7 +112,7 @@ public class EmailService {
         context.setVariable("listaParcelasSac", dezPrimeirasParcelasSac);
         context.setVariable("listaParcelasPrice", dezPrimeirasParcelasPrice);
 
-        return templateEngine.process("relatorio-simulacao-email-ambos", context);
+        return templateEngine.process("relatorio-simulacao-emailUsuario-ambos", context);
     }
 
     private String formatarData(LocalDateTime data) {

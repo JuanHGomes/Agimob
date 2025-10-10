@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Random;
+
 @Service
 public class ScoreApiService {
 
@@ -19,6 +21,9 @@ public class ScoreApiService {
 
         header.set("X-API-KEY", "agireport");
         header.set("X-API-NAME", "agireport");
+
+       Random random = new Random();
+
 
         int id = 2;
 

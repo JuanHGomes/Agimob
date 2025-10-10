@@ -100,6 +100,10 @@
 
         }
 
+        public void calcularInformacoesClienteAgi(Simulacao simulacao){
+
+        }
+
         public InformacoesAdicionaisDto calcularInformacoesAdicionais(Simulacao simulacao, List<ParcelaDto> parcelas){
 
             double primeiraParcela = valorPrimeiraParcela(parcelas);

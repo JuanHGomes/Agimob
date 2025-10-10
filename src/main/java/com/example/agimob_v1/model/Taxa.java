@@ -29,4 +29,7 @@ public class Taxa {
 
     @OneToMany(mappedBy = "id_taxa")
     private List<Simulacao> simulacoes;
+
+    @Column(name = "risco")
+    private String risco;
 }

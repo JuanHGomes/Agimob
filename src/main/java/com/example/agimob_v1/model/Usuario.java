@@ -11,20 +11,27 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class rv dUsuario {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id_usuario")
     private Long id;
 
-    @Column(unique = true, name="email")
+    @Column(unique = true, name="emailUsuario")
     private String email;
+
+    @Column
+    private String cpf;
 
     @OneToMany(mappedBy = "usuario")
     private List<Simulacao> simulacoes;
 
     public Usuario(String email){
         this.email = email;
+    }
+    public Usuario(String email, String cpf){
+        this.email = email;
+        this.cpf = cpf;
     }
 }
