@@ -59,6 +59,7 @@ public class Simulacao {
     }
 
 
-
+    public Simulacao(int valorTotal, int valorEntrada, int prazo, int rendaUsuario, int rendaParticipante, double valorTaxa, String tipoModalidade) {
+    }
 }
 
