@@ -18,11 +18,14 @@ public class Usuario {
     @Column(name = "Id_usuario")
     private Long id;
 
-    @Column(unique = true, name="emailUsuario")
+    @Column(unique = true, name="email")
     private String email;
 
-    @Column
+    @Column(name = "cpf", unique = true)
     private String cpf;
+
+    @Column(name = "id_score")
+    private int idScore;
 
     @OneToMany(mappedBy = "usuario")
     private List<Simulacao> simulacoes;

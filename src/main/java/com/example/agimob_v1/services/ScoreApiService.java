@@ -14,6 +14,12 @@ import java.util.Random;
 @Service
 public class ScoreApiService {
 
+    private final UsuarioService usuarioService;
+
+    public ScoreApiService(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
+
     public ResponseEntity<ScoreDto> consultarScore(String cpf){
 
         RestTemplate restTemplate = new RestTemplate();
@@ -22,10 +28,7 @@ public class ScoreApiService {
         header.set("X-API-KEY", "agireport");
         header.set("X-API-NAME", "agireport");
 
-       Random random = new Random();
-
-
-        int id = 2;
+        int id = usuarioService.localizarUsuarioPorCpf(cpf).getIdScore();
 
         HttpEntity<String> request = new HttpEntity<>(header);
 

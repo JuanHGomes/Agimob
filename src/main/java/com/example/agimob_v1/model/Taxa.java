@@ -12,7 +12,7 @@ import java.util.List;
 public class Taxa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="Id_taxa")
+    @Column(name ="id_taxa")
     private Long id;
 
     @Column(nullable = false, unique = true, name = "codigo")

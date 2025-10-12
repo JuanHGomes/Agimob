@@ -4,10 +4,7 @@ import com.example.agimob_v1.dto.ScoreDto;
 import com.example.agimob_v1.dto.SimulacaoRequestDto;
 import com.example.agimob_v1.dto.SimulacaoResponseDto;
 import com.example.agimob_v1.model.Simulacao;
-import com.example.agimob_v1.services.EmailService;
-import com.example.agimob_v1.services.PdfService;
-import com.example.agimob_v1.services.ScoreApiService;
-import com.example.agimob_v1.services.SimulacaoService;
+import com.example.agimob_v1.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +28,17 @@ public class SimulacaoController {
     }
 
     @PostMapping
-    public SimulacaoResponseDto novaSimulacao(@RequestBody SimulacaoRequestDto simulacaoRequestDto) throws Exception {
-        return simulacaoService.novaSimulacao(simulacaoRequestDto);
+    public SimulacaoResponseDto novaSimulacao(@RequestBody SimulacaoRequestDto simulacaoRequest) throws RuntimeException {
+
+        simulacaoService.validarSimulacaoRequest(simulacaoRequest);
+
+        return simulacaoService.novaSimulacao(simulacaoRequest);
+
     }
 
     @PostMapping("/enviarSimulacao/{emailUsuario}/{idSimulacao}")
-    public ResponseEntity<Void> enviarSimulacao(@PathVariable String email, @PathVariable Long idSimulacao) throws Exception {
-        return emailService.enviarEmail(email, idSimulacao);
+    public ResponseEntity<Void> enviarSimulacao(@PathVariable String emailUsuario, @PathVariable Long idSimulacao) throws Exception {
+        return emailService.enviarEmail(emailUsuario, idSimulacao);
     }
 
     @PostMapping("/baixarSimulacao/{idSimulacao}")
@@ -49,5 +50,9 @@ public class SimulacaoController {
     public ResponseEntity<ScoreDto> score(String cpf){
         return scoreApiService.consultarScore(cpf);
     }
+
+
+
+
 
 }

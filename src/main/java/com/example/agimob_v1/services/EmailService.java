@@ -1,36 +1,23 @@
 package com.example.agimob_v1.services;
 
-import com.example.agimob_v1.dto.InformacoesAdicionaisDto;
 import com.example.agimob_v1.dto.ParcelaDto;
-import com.example.agimob_v1.dto.SimulacaoResponseDto;
-import com.example.agimob_v1.exceptions.SimulacaoNaoEncontradaException;
-import com.example.agimob_v1.exceptions.UsuarioNaoEncontradoException;
+import com.example.agimob_v1.dto.SimulacaoRequestDto;
 import com.example.agimob_v1.model.Simulacao;
 import com.example.agimob_v1.model.Usuario;
-import com.example.agimob_v1.repository.SimulacaoRepository;
-import com.example.agimob_v1.repository.UsuarioRepository;
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.util.ByteArrayDataSource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.function.EntityResponse;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 
-import javax.swing.text.html.parser.Entity;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +31,7 @@ public class EmailService {
 
     public ResponseEntity<Void> enviarEmail(String emailUsuario, Long idSimulacao) throws Exception {
 
-        Usuario usuario = usuarioService.validarUsuario(emailUsuario);
+        Usuario usuario = usuarioService.validarUsuarioPeloEmail(emailUsuario);
 
         Simulacao simulacao = simulacaoService.localizarSimulacao(idSimulacao);
 
@@ -71,17 +58,17 @@ public class EmailService {
         String modalidade = simulacao.getTipo_modalidade();
 
         if(modalidade.equalsIgnoreCase("SAC")){
-            List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getParcelasSac();
+            List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getSac().parcelas();
 
             return gerarHtmlSacOuPrice(simulacao.getTipo_modalidade(), parcelasSac);
         }
         else if(modalidade.equalsIgnoreCase("PRICE")){
-            List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getParcelasPrice();
+            List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getPrice().parcelas();
 
             return gerarHtmlSacOuPrice(simulacao.getTipo_modalidade(), parcelasPrice);
         }
-        List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getParcelasSac();
-        List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getParcelasPrice();
+        List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getSac().parcelas();
+        List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getPrice().parcelas();
 
         return gerarHtmlSacEPrice(modalidade, parcelasSac, parcelasPrice);
 
@@ -97,7 +84,7 @@ public class EmailService {
         context.setVariable("tipoSimulacao", modalidade.toUpperCase());
         context.setVariable("listaParcelas", dezPrimeirasParcelas);
 
-        return templateEngine.process("relatorio-simulacao-emailUsuario", context);
+        return templateEngine.process("relatorio-simulacao-email", context);
     }
 
     private String gerarHtmlSacEPrice(String
@@ -112,7 +99,7 @@ public class EmailService {
         context.setVariable("listaParcelasSac", dezPrimeirasParcelasSac);
         context.setVariable("listaParcelasPrice", dezPrimeirasParcelasPrice);
 
-        return templateEngine.process("relatorio-simulacao-emailUsuario-ambos", context);
+        return templateEngine.process("relatorio-simulacao-email-ambos", context);
     }
 
     private String formatarData(LocalDateTime data) {

@@ -9,15 +9,10 @@ import com.example.agimob_v1.model.Simulacao;
 import com.example.agimob_v1.model.Taxa;
 import com.example.agimob_v1.model.Usuario;
 import com.example.agimob_v1.repository.SimulacaoRepository;
-import com.example.agimob_v1.repository.TaxaRepository;
-import com.example.agimob_v1.services.mappers.SimulacaoResponseMapper;
-
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,11 +21,8 @@ public class SimulacaoService {
 
     private final SimulacaoRepository simulacaoRepository;
     private final CalculadoraSimulacaoService calculadoraSimulacaoService;
-    private final TaxaRepository taxaRepository;
-    private final SimulacaoResponseMapper simulacaoResponseMapper;
-    private final UsuarioService usuarioService;
     private final TaxaService taxaService;
-    private final String taxaPadrao = "AGIBANK";
+    private final UsuarioService usuarioService;
 
     public int prazoConvertido(SimulacaoRequestDto simulacaoRequest) {
         return simulacaoRequest.prazo()*12;
@@ -42,53 +34,32 @@ public class SimulacaoService {
 
     public SimulacaoResponseDto novaSimulacao(SimulacaoRequestDto simulacaoRequest) throws RuntimeException {
 
-        validarRequest(simulacaoRequest);
-
-        boolean clienteAgi =  usuarioService.validarSeClienteAgi(simulacaoRequest.emailUsuario(), simulacaoRequest.cpfUsuario());
-
-        Taxa taxa;
-
-        if(clienteAgi){
-          taxa = taxaService.determinarTaxaPorScore(simulacaoRequest.cpfUsuario());
-        }
-        else{
-            taxa = taxaRepository.findVigenteByCodigo(taxaPadrao, LocalDateTime.now()).orElseThrow();
-        }
-
+        Taxa taxa = taxaService.getTaxaPadraoVigente();
         double valorFinanciamento = simulacaoRequest.valorTotal();
         double valorEntrada = simulacaoRequest.valorEntrada();
         int prazo = prazoConvertido(simulacaoRequest);
         double rendaUsuario = simulacaoRequest.rendaUsuario();
         double rendaParticipante = simulacaoRequest.rendaParticipante();
-
-
-
-
         String tipoSimulacao = simulacaoRequest.tipo();
 
-        Simulacao simulacao = new Simulacao(valorFinanciamento, valorEntrada, prazo, rendaUsuario, rendaParticipante, taxa, tipoSimulacao);
+        String tipoUsuario = "GERAL";
 
-        simulacaoRepository.save(simulacao);
+        if(simulacaoRequest.cpfUsuario() != null){
+            tipoUsuario = "CLIENTE";
+        }
+
+        Simulacao simulacao = new Simulacao(valorFinanciamento, valorEntrada, prazo, rendaUsuario, rendaParticipante, taxa, tipoSimulacao, tipoUsuario);
+
+        Simulacao simulacaoSalva = simulacaoRepository.save(simulacao);
+
+        if(tipoUsuario.equalsIgnoreCase("CLIENTE"))
+        {
+            Usuario clienteAgi = usuarioService.localizarUsuarioPorCpf(simulacaoRequest.cpfUsuario());
+            setUsuarioSimulacao(clienteAgi, simulacaoSalva.getId());
+        }
+
 
         return calculadoraSimulacaoService.calcularParcelas(simulacao);
-
-    }
-
-
-    private void validarRequest(SimulacaoRequestDto request){
-
-        if(request.valorTotal() <=0){
-            throw new ValorMenorIgualZeroException("O valor do financiamento não pode ser menor ou igual a ZERO!");
-        }
-        if(request.valorEntrada() <=0){
-            throw new ValorMenorIgualZeroException("O valor do Valor de Entrada não pode ser menor ou igual a ZERO!");
-        }
-        if(!request.tipo().equalsIgnoreCase("SAC") && !request.tipo().equalsIgnoreCase("PRICE") && !request.tipo().equalsIgnoreCase("AMBOS")){
-            throw new FormatoIndevidoException("Modalidade inserida inválida, as modadaliades válidas são: SAC, PRICE e AMBOS");
-        }
-        if(request.prazo() > 35 || request.prazo() < 1){
-            throw new ValorForaDaFaixaException("O Prazo precisa estar entre 1 e 35 anos!");
-        }
 
     }
 
@@ -104,6 +75,26 @@ public class SimulacaoService {
 
        simulacaoRepository.save(simulacao);
     }
+
+    public void validarSimulacaoRequest(SimulacaoRequestDto request) throws RuntimeException{
+
+        if(request.valorTotal() <=0){
+            throw new ValorMenorIgualZeroException("O valor do financiamento não pode ser menor ou igual a ZERO!");
+        }
+        if(request.valorEntrada() <=0){
+            throw new ValorMenorIgualZeroException("O valor do Valor de Entrada não pode ser menor ou igual a ZERO!");
+        }
+        if(!request.tipo().equalsIgnoreCase("SAC") && !request.tipo().equalsIgnoreCase("PRICE") && !request.tipo().equalsIgnoreCase("AMBOS")){
+            throw new FormatoIndevidoException("Modalidade inserida inválida, as modadaliades válidas são: SAC, PRICE e AMBOS");
+        }
+        if(request.prazo() > 35 || request.prazo() < 1){
+            throw new ValorForaDaFaixaException("O Prazo precisa estar entre 1 e 35 anos!");
+        }
+
+
+    }
+
+
 
 }
 
