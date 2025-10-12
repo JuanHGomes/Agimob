@@ -62,17 +62,17 @@ public class PdfService {
         String modalidade = simulacao.getTipo_modalidade();
 
         if(modalidade.equalsIgnoreCase("SAC")){
-            List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getParcelasSac();
+            List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getSac().parcelas();
 
             return gerarHtmlSacOuPrice(simulacao.getTipo_modalidade(), parcelasSac);
         }
         else if(modalidade.equalsIgnoreCase("PRICE")){
-            List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getParcelasPrice();
+            List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getPrice().parcelas();
 
             return gerarHtmlSacOuPrice(simulacao.getTipo_modalidade(), parcelasPrice);
         }
-        List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getParcelasSac();
-        List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getParcelasPrice();
+        List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getSac().parcelas();
+        List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getPrice().parcelas();
 
         return gerarHtmlSacEPrice(modalidade, parcelasSac, parcelasPrice);
 

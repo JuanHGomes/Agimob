@@ -42,12 +42,15 @@ public class Simulacao {
     @Column(name ="tipo_modalidade")
     private String tipo_modalidade;
 
+    @Column(name = "tipo_usuario")
+    String tipoUsuario;
+
     @ManyToOne
-    @JoinColumn(name = "Id_taxa")
+    @JoinColumn(name = "id_taxa")
     private Taxa id_taxa;
 
 
-    public Simulacao(double valor_total, double valor_entrada, int prazo, double renda_usuario, double renda_participante, Taxa id_taxa, String tipo_modalidade) {
+    public Simulacao(double valor_total, double valor_entrada, int prazo, double renda_usuario, double renda_participante, Taxa id_taxa, String tipo_modalidade, String tipoUsuario) {
         this.data = LocalDateTime.now();
         this.valor_total = valor_total;
         this.valor_entrada = valor_entrada;
@@ -56,6 +59,7 @@ public class Simulacao {
         this.renda_participante = renda_participante;
         this.id_taxa = id_taxa;
         this.tipo_modalidade = tipo_modalidade;
+        this.tipoUsuario = tipoUsuario;
     }
 
 
