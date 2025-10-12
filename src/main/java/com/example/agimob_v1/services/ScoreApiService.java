@@ -9,8 +9,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Random;
+
 @Service
 public class ScoreApiService {
+
+    private final UsuarioService usuarioService;
+
+    public ScoreApiService(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     public ResponseEntity<ScoreDto> consultarScore(String cpf){
 
@@ -20,7 +28,7 @@ public class ScoreApiService {
         header.set("X-API-KEY", "agireport");
         header.set("X-API-NAME", "agireport");
 
-        int id = 2;
+        int id = usuarioService.localizarUsuarioPorCpf(cpf).getIdScore();
 
         HttpEntity<String> request = new HttpEntity<>(header);
 

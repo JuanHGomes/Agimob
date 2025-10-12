@@ -1,12 +1,9 @@
 package com.example.agimob_v1.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-
 public record SimulacaoRequestDto (
+         String cpfUsuario,
+         String emailUsuario,
          double valorTotal,
          double valorEntrada,
          double rendaUsuario,
