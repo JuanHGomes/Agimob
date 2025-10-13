@@ -5,60 +5,76 @@ import com.example.agimob_v1.dto.ParcelaDto;
 import com.example.agimob_v1.dto.SimulacaoResponseDto;
 import com.example.agimob_v1.model.Simulacao;
 import com.example.agimob_v1.model.Taxa;
+import com.example.agimob_v1.model.Usuario;
 import com.example.agimob_v1.repository.SimulacaoRepository;
-import com.example.agimob_v1.repository.TaxaRepository;
 import com.example.agimob_v1.services.CalculadoraSimulacaoService;
+import com.example.agimob_v1.services.mappers.SimulacaoResponseMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CalculadoraSimulacaoServiceTest {
-
     @Mock
-    private SimulacaoRepository repository;
+    private Usuario usuarioMock;
+    @Mock
+    private Taxa taxaMock;
+    @Mock
+    private SimulacaoResponseMapper mapperMock;
 
     @InjectMocks
     private CalculadoraSimulacaoService service;
 
     @Test
     void calculaParcelasCorretamente(){
-        Taxa taxa = new Taxa();
-        taxa.setId(1L);
+        taxaMock.setId(1L);
+        taxaMock.setValor_taxa(0.09);
 
-        List<ParcelaDto> parcelasSac = new ArrayList<>();
+        List<ParcelaDto> parcelas = new ArrayList<>();
+        parcelas.add(new ParcelaDto(1,2458.33,375,2083.33,47916.67));
 
         SimulacaoResponseDto response = new SimulacaoResponseDto();
-        Simulacao simulacao = new Simulacao(300000,100000,30,
-                3000,0,taxa.getId(),"SAC");
+        response.setId(1L);
+        response.setTipo("SAC");
+        response.setParcelasSac(parcelas);
 
-        double somaParcleasSac=parcelasSac.stream().mapToDouble(ParcelaDto::getValorTotalParcela).sum();
-        double totalJuros = somaParcleasSac - service.valorTotalFinanciamento(parcelasSac);
-        InformacoesAdicionaisDto info = new InformacoesAdicionaisDto(service.valorPrimeiraParcela(parcelasSac), service.valorUltimaParcela(parcelasSac),
-                service.valorTotalFinanciamento(parcelasSac),totalJuros,service.rendaComprometida(simulacao,parcelasSac),service.diferencaPriceSac(simulacao));
+        Simulacao simulacao = new Simulacao(1L, LocalDateTime.now(),100000,50000,
+                2,3000, 0,usuarioMock,"SAC",taxaMock);
 
-        when(service.calcularParcelas(simulacao)).thenReturn(response);
+
+        when(mapperMock.toSacResponseDto(
+                anyLong(),
+                anyString(),
+                anyList(),
+                any(InformacoesAdicionaisDto.class))).thenReturn(response);
 
         SimulacaoResponseDto retornoCorreto = service.calcularParcelas(simulacao);
 
         assertNotNull(retornoCorreto);
 
-        assertEquals(185L, retornoCorreto.getId());
+        assertEquals(1L, retornoCorreto.getId());
         assertEquals("SAC", retornoCorreto.getTipo());
-        assertEquals(parcelasSac, retornoCorreto.getParcelasSac());
-        assertEquals(info, retornoCorreto.getInformacoesAdicionaisSac());
+        assertEquals(response.getParcelasSac(), retornoCorreto.getParcelasSac());
 
-        verify(service).calcularParcelas(simulacao);
+        verify(mapperMock).toSacResponseDto(
+                eq(simulacao.getId()),
+                eq(simulacao.getTipo_modalidade()),
+                anyList(),
+                any(InformacoesAdicionaisDto.class));
 
     }
+
 }
