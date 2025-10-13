@@ -128,10 +128,11 @@
             int prazo = simulacao.getPrazo();
             double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
             double amortizacao = saldoDevedor/prazo;
+            double taxaMensal = taxa.getValor_taxa()/12;
 
             List<ParcelaDto> parcelas = new ArrayList<>();
             for (int i = 1; i <= prazo ; i++) {
-                double valorJurosParcela = saldoDevedor * taxa.getValor_taxa();
+                double valorJurosParcela = saldoDevedor * taxaMensal;
                 double valorTotalParcela = amortizacao + valorJurosParcela;
 
                 saldoDevedor -= amortizacao;
@@ -157,17 +158,17 @@
             //n = numero de parcelas
 
             int prazo = simulacao.getPrazo();
-            double juros = taxa.getValor_taxa();
+            double taxaMensal = taxa.getValor_taxa()/12;
             double saldoDevedor = simulacao.getValor_total()-simulacao.getValor_entrada();
             double parcelaFixa = saldoDevedor*
-                    (juros*(Math.pow(1+juros,prazo))
-                            /(Math.pow(1+ juros,prazo)-1)
+                    (taxaMensal*(Math.pow(1+taxaMensal,prazo))
+                            /(Math.pow(1+ taxaMensal,prazo)-1)
                     );
 
             List<ParcelaDto> parcelas = new ArrayList<>();
 
             for (int i = 1; i <= prazo ; i++) {
-                double jurosSaldoDevedor = saldoDevedor* juros;
+                double jurosSaldoDevedor = saldoDevedor* taxaMensal;
                 double amortizacaoMes = parcelaFixa - jurosSaldoDevedor;
 
                 saldoDevedor -= amortizacaoMes;

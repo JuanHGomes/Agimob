@@ -40,7 +40,7 @@ public class SimulacaoService {
         int prazo = prazoConvertido(simulacaoRequest);
         double rendaUsuario = simulacaoRequest.rendaUsuario();
         double rendaParticipante = simulacaoRequest.rendaParticipante();
-        String tipoSimulacao = simulacaoRequest.tipo();
+        String tipoSimulacao = simulacaoRequest.tipo().toUpperCase();
 
         String tipoUsuario = "GERAL";
 

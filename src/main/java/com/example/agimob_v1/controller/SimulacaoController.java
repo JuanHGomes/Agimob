@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/agimob/simulacao")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class SimulacaoController {
 
     private final SimulacaoService simulacaoService;
