@@ -1,40 +1,296 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${assunto}"></title>
+    <title th:text="${assunto}">Relatório de Simulação</title>
+    <meta charset="UTF-8"/>
     <style>
-        body { font-family: Arial, sans-serif; }
-        .parcela-table { width: 100%; border-collapse: collapse; }
-        .parcela-table th, .parcela-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            line-height: 1.5;
+            font-size: 11pt;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .header {
+            background-color: #0066cc;
+            padding: 25px;
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .header h1 {
+            font-size: 24pt;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 11pt;
+        }
+
+        .info-section {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-section p {
+            color: #2e7d32;
+            font-size: 11pt;
+            margin: 5px 0;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #1b5e20;
+        }
+
+        .tipo-simulacao {
+            color: #0066cc;
+            font-weight: bold;
+        }
+
+        .section-title {
+            color: #0066cc;
+            font-size: 16pt;
+            font-weight: bold;
+            margin: 25px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #4caf50;
+        }
+
+        .resumo-financeiro {
+            width: 100%;
+            margin-bottom: 20px;
+            border: 2px solid #0066cc;
+            border-radius: 5px;
+            border-collapse: collapse;
+        }
+
+        .resumo-financeiro tr {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .resumo-financeiro tr:last-child {
+            border-bottom: none;
+        }
+
+        .resumo-financeiro td {
+            padding: 12px;
+        }
+
+        .resumo-financeiro td.label {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #0066cc;
+            width: 40%;
+        }
+
+        .resumo-financeiro td.value {
+            background-color: #ffffff;
+            color: #333333;
+            font-weight: 600;
+            width: 60%;
+        }
+
+        .parcela-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+
+        .parcela-table thead {
+            background-color: #0066cc;
+            color: #ffffff;
+        }
+
+        .parcela-table th {
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 10pt;
+            border: 1px solid #0052a3;
+        }
+
+        .parcela-table tbody tr {
+            border: 1px solid #e0e0e0;
+        }
+
+        .parcela-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .parcela-table tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        .parcela-table td {
+            padding: 8px;
+            color: #333333;
+            font-size: 10pt;
+            border: 1px solid #e0e0e0;
+        }
+
+        .parcela-table td.numero {
+            font-weight: bold;
+            color: #0066cc;
+            text-align: center;
+        }
+
+        .parcela-table td.valor {
+            text-align: right;
+        }
+
+        .observacoes {
+            background-color: #fff9e6;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .observacoes h3 {
+            color: #f57c00;
+            font-size: 12pt;
+            margin-bottom: 10px;
+        }
+
+        .observacoes ul {
+            margin-left: 20px;
+            color: #666666;
+        }
+
+        .observacoes li {
+            margin-bottom: 5px;
+            font-size: 10pt;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 3px solid #4caf50;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #666666;
+            font-size: 10pt;
+            margin: 5px 0;
+        }
+
+        .footer .signature {
+            color: #0066cc;
+            font-weight: bold;
+            font-size: 12pt;
+            margin-top: 10px;
+        }
+
+        .footer .contato {
+            font-size: 9pt;
+            color: #999999;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-<h1 style="color: #0066cc;">Seu Resultado de Simulação</h1>
+<div class="container">
+    <!-- Cabeçalho -->
+    <div class="header">
+        <h1>RELATÓRIO DE SIMULAÇÃO</h1>
+        <p>Análise Detalhada de Financiamento AGIMOB</p>
+    </div>
 
-<p>Obrigado por simular com o AGIMOB! Sua simulação do tipo <b><span th:text="${tipoSimulacao}"></span></b> foi concluída.</p>
+    <!-- Informações Gerais -->
+    <div class="info-section">
+        <p><span class="info-label">Tipo de Simulação:</span> <span class="tipo-simulacao" th:text="${tipoSimulacao}">SAC</span></p>
+        <p><span class="info-label">Data da Simulação:</span> <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">13/10/2025 10:30</span></p>
+    </div>
 
-<h2>Detalhes da simulação</h2>
-<table class="parcela-table">
-    <thead>
-    <tr>
-        <th>Nº</th>
-        <th>Valor Total</th>
-        <th>Juros</th>
-        <th>Amortização</th>
-        <th>Saldo devedor</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="parcela : ${listaParcelas}">
-        <td th:text="${parcela.numeroParcela}">1</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">1000.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">250.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">750.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.getSaldoDevedor(), 0, 'COMMA', 2, 'POINT')}">750.00</td>
-    </tr>
-    </tbody>
-</table>
+    <!-- Resumo Financeiro -->
+    <h2 class="section-title">Resumo Financeiro</h2>
+    <table class="resumo-financeiro">
+        <tr>
+            <td class="label">Valor do Financiamento</td>
+            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(valorFinanciamento, 0, 'COMMA', 2, 'POINT')}">R$ 100.000,00</td>
+        </tr>
+        <tr>
+            <td class="label">Taxa de Juros</td>
+            <td class="value" th:text="${#numbers.formatDecimal(taxaJuros, 0, 'COMMA', 2, 'POINT')} + '% ao mês'">1,50% ao mês</td>
+        </tr>
+        <tr>
+            <td class="label">Número de Parcelas</td>
+            <td class="value" th:text="${numeroParcelas}">120</td>
+        </tr>
+        <tr>
+            <td class="label">Total de Juros</td>
+            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(totalJuros, 0, 'COMMA', 2, 'POINT')}">R$ 45.000,00</td>
+        </tr>
+        <tr>
+            <td class="label">Valor Total a Pagar</td>
+            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(valorTotal, 0, 'COMMA', 2, 'POINT')}">R$ 145.000,00</td>
+        </tr>
+    </table>
 
-<p>Atenciosamente, <br/>Equipe Agimob.</p>
+    <!-- Tabela de Parcelas -->
+    <h2 class="section-title">Detalhamento das Parcelas</h2>
+
+    <table class="parcela-table">
+        <thead>
+        <tr>
+            <th style="width: 8%;">Nº</th>
+            <th style="width: 23%;">Valor Total</th>
+            <th style="width: 23%;">Juros</th>
+            <th style="width: 23%;">Amortização</th>
+            <th style="width: 23%;">Saldo Devedor</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="parcela : ${listaParcelas}">
+            <td class="numero" th:text="${parcela.numeroParcela}">1</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.000,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">R$ 250,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">R$ 750,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.saldoDevedor, 0, 'COMMA', 2, 'POINT')}">R$ 9.250,00</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Observações -->
+    <div class="observacoes">
+        <h3>Observações Importantes</h3>
+        <ul>
+            <li>Os valores apresentados são uma simulação e podem sofrer alterações na contratação.</li>
+            <li>Esta simulação não constitui proposta de crédito ou contrato de financiamento.</li>
+            <li>Para efetivar o financiamento, é necessário análise de crédito e apresentação de documentação.</li>
+            <li>Consulte as condições específicas e taxas vigentes no momento da contratação.</li>
+        </ul>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="footer">
+        <p>Este documento foi gerado automaticamente pelo sistema AGIMOB</p>
+        <p class="signature">Equipe AGIMOB</p>
+        <p class="contato">www.agimob.com.br | contato@agimob.com.br</p>
+    </div>
+</div>
 </body>
 </html>

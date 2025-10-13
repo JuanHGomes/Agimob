@@ -1,8 +1,10 @@
 package com.example.agimob_v1.services;
 
 
+import com.example.agimob_v1.dto.InformacoesAdicionaisDto;
 import com.example.agimob_v1.dto.ParcelaDto;
 import com.example.agimob_v1.model.Simulacao;
+import com.example.agimob_v1.model.Taxa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ public class PdfService {
     private final TemplateEngine templateEngine;
     private final CalculadoraSimulacaoService calculadoraSimulacao;
     private final SimulacaoService simulacaoService;
+    private final TaxaService taxaService;
 
 
     public byte[] gerarRelatorioPdf(Simulacao simulacao){
@@ -64,43 +67,69 @@ public class PdfService {
         if(modalidade.equalsIgnoreCase("SAC")){
             List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getSac().parcelas();
 
-            return gerarHtmlSacOuPrice(simulacao.getTipo_modalidade(), parcelasSac);
+            return gerarHtmlSacOuPrice(simulacao, parcelasSac);
         }
         else if(modalidade.equalsIgnoreCase("PRICE")){
             List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getPrice().parcelas();
 
-            return gerarHtmlSacOuPrice(simulacao.getTipo_modalidade(), parcelasPrice);
+            return gerarHtmlSacOuPrice(simulacao, parcelasPrice);
         }
         List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getSac().parcelas();
         List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getPrice().parcelas();
 
-        return gerarHtmlSacEPrice(modalidade, parcelasSac, parcelasPrice);
+        return gerarHtmlSacEPrice(simulacao, parcelasSac, parcelasPrice);
 
     }
 
 
-    private String gerarHtmlSacOuPrice(String modalidade, List<ParcelaDto> parcelas) {
+    private String gerarHtmlSacOuPrice(Simulacao simulacao, List<ParcelaDto> parcelas) {
 
-        List<ParcelaDto> dezPrimeirasParcelas = parcelas.stream().limit(10).toList();
+        List<ParcelaDto> dezPrimeirasParcelas = parcelas.stream().toList();
+        Taxa taxa = taxaService.getTaxaPadraoVigente();
+        InformacoesAdicionaisDto infosAdicionais =  calculadoraSimulacao.calcularInformacoesAdicionais(simulacao,parcelas, taxa);
 
         Context context = new Context();
         context.setVariable("assunto", "Relatório de Simulacão");
-        context.setVariable("tipoSimulacao", modalidade.toUpperCase());
+        context.setVariable("tipoSimulacao", simulacao.getTipo_modalidade().toUpperCase());
         context.setVariable("listaParcelas", dezPrimeirasParcelas);
+        context.setVariable("valorFinanciamento", simulacao.getValor_total());
+        context.setVariable("taxaJuros", taxa.getValor_taxa());
+        context.setVariable("numeroParcelas", simulacao.getPrazo());
+        context.setVariable("totalJuros", infosAdicionais.valorTotalJuros());
+        context.setVariable("valorTotal", infosAdicionais.valorTotalFinanciamento());
 
         return templateEngine.process("relatorio-simulacao-pdf", context);
     }
 
-    private String gerarHtmlSacEPrice(String modalidade, List<ParcelaDto> parcelasSac, List<ParcelaDto> parcelasPrice) {
+    private String gerarHtmlSacEPrice(Simulacao simulacao, List<ParcelaDto> parcelasSac, List<ParcelaDto> parcelasPrice) {
+        Taxa taxa = taxaService.getTaxaPadraoVigente();
+        List<ParcelaDto> dezPrimeirasParcelasSac = parcelasSac.stream().toList();
+        List<ParcelaDto> dezPrimeirasParcelasPrice = parcelasPrice.stream().toList();
+        InformacoesAdicionaisDto infosAdicionaisSac = calculadoraSimulacao.calcularInformacoesAdicionais(simulacao, parcelasSac, taxa);
+        InformacoesAdicionaisDto infosAdicionaisPrice = calculadoraSimulacao.calcularInformacoesAdicionais(simulacao, parcelasPrice, taxa);
 
-        List<ParcelaDto> dezPrimeirasParcelasSac = parcelasSac.stream().limit(10).toList();
-        List<ParcelaDto> dezPrimeirasParcelasPrice = parcelasPrice.stream().limit(10).toList();
 
         Context context = new Context();
         context.setVariable("assunto", "Relatório de Simulacão");
-        context.setVariable("tipoSimulacao", modalidade.toUpperCase());
+        context.setVariable("tipoSimulacao", simulacao.getTipo_modalidade().toUpperCase());
+
         context.setVariable("listaParcelasSac", dezPrimeirasParcelasSac);
+        context.setVariable("valorFinanciamento", simulacao.getValor_total());
+        context.setVariable("taxaJuros", taxa.getValor_taxa());
+        context.setVariable("numeroParcelas", simulacao.getPrazo());
+        context.setVariable("totalJuros", infosAdicionaisSac.valorTotalJuros());
+        context.setVariable("valorTotal", infosAdicionaisSac.valorTotalFinanciamento());
+        context.setVariable("informacoesAdicionaisSac", infosAdicionaisSac);
+
         context.setVariable("listaParcelasPrice", dezPrimeirasParcelasPrice);
+        context.setVariable("valorFinanciamento", simulacao.getValor_total());
+        context.setVariable("taxaJuros", taxa.getValor_taxa());
+        context.setVariable("numeroParcelas", simulacao.getPrazo());
+        context.setVariable("totalJuros", infosAdicionaisPrice.valorTotalJuros());
+        context.setVariable("valorTotal", infosAdicionaisPrice.valorTotalFinanciamento());
+        context.setVariable("informacoesAdicionaisPrice", infosAdicionaisPrice);
+
+
 
         return templateEngine.process("relatorio-simulacao-pdf-ambos", context);
     }

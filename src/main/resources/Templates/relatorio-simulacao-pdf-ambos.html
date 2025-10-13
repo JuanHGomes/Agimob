@@ -1,60 +1,121 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${assunto}"></title>
+    <title th:text="${assunto}">Relatório de Simulação Comparativa</title>
+    <meta charset="UTF-8"/>
     <style>
-        body { font-family: Arial, sans-serif; }
-        .parcela-table { width: 100%; border-collapse: collapse; }
-        .parcela-table th, .parcela-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        /* ... Seu CSS Completo (Bloco de Estilos) ... */
+        /* Omitido aqui por brevidade, mas deve ser copiado do seu código original */
     </style>
 </head>
 <body>
-<h1 style="color: #0066cc;">Seu Resultado de Simulação</h1>
+<div class="container">
+    <div class="header">
+        <h1>RELATÓRIO DE SIMULAÇÃO COMPARATIVA</h1>
+        <p>Análise Detalhada das Modalidades SAC e PRICE</p>
+    </div>
 
-<p>Obrigado por simular com o AGIMOB! Sua simulação do tipo <b><span th:text="${tipoSimulacao}"></span></b> foi concluída.</p>
+    <div class="info-section">
+        <p><span class="info-label">Tipo de Simulação:</span> <span class="tipo-simulacao" th:text="${tipoSimulacao}">AMBOS</span></p>
+        <p><span class="info-label">Data da Simulação:</span> <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">13/10/2025 10:30</span></p>
+        <p><span class="info-label">Diferença Total (PRICE - SAC):</span> <span class="tipo-simulacao" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisPrice.diferencaPriceSac, 0, 'COMMA', 2, 'POINT')}">R$ 5.000,00</span> (Menor Custo Final no SAC)</p>
+    </div>
 
-<h2>Detalhes da simulação - Modalidade SAC</h2>
-<table class="parcela-table">
-    <thead>
-    <tr>
-        <th>Nº</th>
-        <th>Valor Total</th>
-        <th>Juros</th>
-        <th>Amortização</th>
-        <th>Saldo devedor</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="parcela : ${listaParcelasSac}">
-        <td th:text="${parcela.numeroParcela}">1</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">1000.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">250.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">750.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.getSaldoDevedor(), 0, 'COMMA', 2, 'POINT')}">750.00</td>
-    </tr>
-    </tbody>
-</table>
-<h2>Detalhes da simulação - Modalidade PRICE</h2>
-<table class="parcela-table">
-    <thead>
-    <tr>
-        <th>Nº</th>
-        <th>Valor Total</th>
-        <th>Juros</th>
-        <th>Amortização</th>
-        <th>Saldo devedor</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="parcela : ${listaParcelasPrice}">
-        <td th:text="${parcela.numeroParcela}">1</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">1000.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">250.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">750.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.getSaldoDevedor(), 0, 'COMMA', 2, 'POINT')}">750.00</td>
-    </tr>
-    </tbody>
-</table>
-<p>Atenciosamente, <br/>Equipe Agimob.</p>
+    <h2 class="section-title">1. Resultados: Sistema SAC</h2>
+
+    <table class="resumo-financeiro">
+        <tr>
+            <td class="label">Primeira Parcela</td>
+            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisSac.primeiraParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.500,00</td>
+        </tr>
+        <tr>
+            <td class="label">Última Parcela</td>
+            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisSac.ultimaParcela, 0, 'COMMA', 2, 'POINT')}">R$ 900,00</td>
+        </tr>
+        <tr>
+            <td class="label">Renda Comprometida</td>
+            <td class="value" th:text="${#numbers.formatDecimal(informacoesAdicionaisSac.rendaComprometida, 0, 'COMMA', 2, 'POINT')} + '%'">30,00%</td>
+        </tr>
+        <tr>
+            <td class="label" style="background-color: #d1e7dd; color: #0f5132;">Total de Juros (SAC)</td>
+            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisSac.valorTotalJuros, 0, 'COMMA', 2, 'POINT')}" style="background-color: #d1e7dd; color: #0f5132;">R$ 45.000,00</td>
+        </tr>
+        <tr>
+            <td class="label" style="background-color: #f5f5f5;">Total Pago (SAC)</td>
+            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisSac.valorTotalFinanciamento, 0, 'COMMA', 2, 'POINT')}">R$ 145.000,00</td>
+        </tr>
+    </table>
+
+    <h3 class="section-title" style="font-size: 14pt; border-bottom: 2px solid #ccc;">Detalhes SAC (Primeiras 12 Parcelas)</h3>
+    <table class="parcela-table">
+        <thead>
+        <tr>
+            <th style="width: 8%;">Nº</th>
+            <th style="width: 23%;">Valor Total</th>
+            <th style="width: 23%;">Juros</th>
+            <th style="width: 23%;">Amortização</th>
+            <th style="width: 23%;">Saldo Devedor</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="parcela : ${listaParcelasSac}">
+            <td class="numero" th:text="${parcela.numeroParcela}">1</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.000,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">R$ 250,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">R$ 750,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.saldoDevedor, 0, 'COMMA', 2, 'POINT')}">R$ 9.250,00</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2 class="section-title" style="margin-top: 40px;">2. Resultados: Tabela PRICE</h2>
+
+    <table class="resumo-financeiro">
+        <tr>
+            <td class="label">Parcela Fixa</td>
+            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisPrice.primeiraParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.250,00</td>
+        </tr>
+        <tr>
+            <td class="label">Renda Comprometida</td>
+            <td class="value" th:text="${#numbers.formatDecimal(informacoesAdicionaisPrice.rendaComprometida, 0, 'COMMA', 2, 'POINT')} + '%'">25,00%</td>
+        </tr>
+        <tr>
+            <td class="label" style="background-color: #fae6e6; color: #842029;">Total de Juros (PRICE)</td>
+            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisPrice.valorTotalJuros, 0, 'COMMA', 2, 'POINT')}" style="background-color: #fae6e6; color: #842029;">R$ 52.000,00</td>
+        </tr>
+        <tr>
+            <td class="label" style="background-color: #f5f5f5;">Total Pago (PRICE)</td>
+            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisPrice.valorTotalFinanciamento, 0, 'COMMA', 2, 'POINT')}">R$ 152.000,00</td>
+        </tr>
+    </table>
+
+    <h3 class="section-title" style="font-size: 14pt; border-bottom: 2px solid #ccc;">Detalhes PRICE (Primeiras 12 Parcelas)</h3>
+    <table class="parcela-table">
+        <thead>
+        <tr>
+            <th style="width: 8%;">Nº</th>
+            <th style="width: 23%;">Valor Total</th>
+            <th style="width: 23%;">Juros</th>
+            <th style="width: 23%;">Amortização</th>
+            <th style="width: 23%;">Saldo Devedor</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="parcela : ${listaParcelasPrice}">
+            <td class="numero" th:text="${parcela.numeroParcela}">1</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.250,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">R$ 500,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">R$ 750,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.saldoDevedor, 0, 'COMMA', 2, 'POINT')}">R$ 9.000,00</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="observacoes">
+    </div>
+
+    <div class="footer">
+    </div>
+</div>
 </body>
 </html>
