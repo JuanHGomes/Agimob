@@ -1,64 +1,358 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${assunto}"></title>
+    <title th:text="${assunto}">Resultado da Simulação Comparativa</title>
+    <meta charset="UTF-8">
     <style>
-        body { font-family: Arial, sans-serif; }
-        .parcela-table { width: 100%; border-collapse: collapse; }
-        .parcela-table th, .parcela-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0066cc 0%, #004c99 100%);
+            padding: 30px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .intro-box {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .intro-box p {
+            color: #2e7d32;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .tipo-simulacao {
+            color: #0066cc;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .comparacao-info {
+            background-color: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .comparacao-info h3 {
+            color: #e65100;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .comparacao-info p {
+            color: #666666;
+            font-size: 14px;
+            margin: 8px 0;
+        }
+
+        .section-title {
+            color: #0066cc;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4caf50;
+        }
+
+        .subsection-title {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 12px 15px;
+            margin: 25px 0 15px 0;
+            border-radius: 5px;
+        }
+
+        .subsection-title.sac {
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+        }
+
+        .subsection-title.price {
+            background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+        }
+
+        .parcela-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .parcela-table thead {
+            color: #ffffff;
+        }
+
+        .parcela-table.sac-table thead {
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+        }
+
+        .parcela-table.price-table thead {
+            background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+        }
+
+        .parcela-table th {
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .parcela-table tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            transition: background-color 0.2s ease;
+        }
+
+        .parcela-table tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .parcela-table tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .parcela-table td {
+            padding: 12px;
+            color: #333333;
+            font-size: 14px;
+        }
+
+        .parcela-table td:first-child {
+            font-weight: 600;
+        }
+
+        .parcela-table.sac-table td:first-child {
+            color: #1976d2;
+        }
+
+        .parcela-table.price-table td:first-child {
+            color: #388e3c;
+        }
+
+        .limite-info {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .limite-info p {
+            color: #1565c0;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .destaque-box {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .destaque-box h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .destaque-box p {
+            font-size: 15px;
+            margin: 5px 0;
+        }
+
+        .download-box {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .download-box p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            padding: 25px 30px;
+            border-top: 3px solid #4caf50;
+        }
+
+        .footer p {
+            color: #666666;
+            font-size: 15px;
+            margin: 0;
+        }
+
+        .footer .signature {
+            color: #0066cc;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .parcela-table th,
+            .parcela-table td {
+                padding: 8px 6px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
-<h1 style="color: #0066cc;">Seu Resultado de Simulação</h1>
+<div class="container">
+    <div class="header">
+        <h1>✓ Simulação Comparativa Concluída!</h1>
+        <p>Resultado da sua simulação SAC vs PRICE - AGIMOB</p>
+    </div>
 
-<p>Obrigado por simular com o AGIMOB! Sua simulação do tipo <b><span th:text="${tipoSimulacao}"></span></b> foi concluída.</p>
+    <div class="content">
+        <div class="intro-box">
+            <p>Obrigado por simular com o AGIMOB! Sua simulação <span class="tipo-simulacao">COMPARATIVA (SAC e PRICE)</span> foi processada com sucesso.</p>
+        </div>
 
-<h2>Detalhes da simulação - Modalidade SAC</h2>
-<table class="parcela-table">
-    <thead>
-    <tr>
-        <th>Nº</th>
-        <th>Valor Total</th>
-        <th>Juros</th>
-        <th>Amortização</th>
-        <th>Saldo devedor</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="parcela : ${listaParcelasSac}">
-        <td th:text="${parcela.numeroParcela}">1</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">1000.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">250.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">750.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.getSaldoDevedor(), 0, 'COMMA', 2, 'POINT')}">750.00</td>
-    </tr>
-    </tbody>
-</table>
+        <div class="comparacao-info">
+            <h3>🔍 Entenda as Diferenças</h3>
+            <p><strong>SAC (Sistema de Amortização Constante):</strong> Parcelas decrescentes com amortização fixa</p>
+            <p><strong>PRICE (Tabela Price):</strong> Parcelas fixas durante todo o financiamento</p>
+        </div>
 
-<h2>Detalhes da simulação - Modalidade PRICE</h2>
-<table class="parcela-table">
-    <thead>
-    <tr>
-        <th>Nº</th>
-        <th>Valor Total</th>
-        <th>Juros</th>
-        <th>Amortização</th>
-        <th>Saldo devedor</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="parcela : ${listaParcelasPrice}">
-        <td th:text="${parcela.numeroParcela}">1</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">1000.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">250.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">750.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.getSaldoDevedor(), 0, 'COMMA', 2, 'POINT')}">750.00</td>
-    </tr>
-    </tbody>
-</table>
+        <!-- ========== TABELA SAC ========== -->
+        <h2 class="section-title">📊 Comparativo de Parcelas</h2>
 
-<p><b> Para visualizar todas as parcelas da simulação faça o download do PDF em anexo!</b></p>
+        <div class="subsection-title sac">Sistema SAC - Primeiras Parcelas</div>
 
-<p>Atenciosamente, <br/>Equipe Agimob.</p>
+        <table class="parcela-table sac-table">
+            <thead>
+            <tr>
+                <th>Nº</th>
+                <th>Valor Total</th>
+                <th>Juros</th>
+                <th>Amortização</th>
+                <th>Saldo Devedor</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="parcela : ${listaParcelasSac}">
+                <td th:text="${parcela.numeroParcela}">1</td>
+                <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.000,00</td>
+                <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">R$ 250,00</td>
+                <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">R$ 750,00</td>
+                <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.saldoDevedor, 0, 'COMMA', 2, 'POINT')}">R$ 9.250,00</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="limite-info">
+            <p>💡 <strong>SAC:</strong> Observe que as parcelas diminuem ao longo do tempo, reduzindo o comprometimento da renda mensal</p>
+        </div>
+
+        <!-- ========== TABELA PRICE ========== -->
+        <div class="subsection-title price">Tabela PRICE - Primeiras Parcelas</div>
+
+        <table class="parcela-table price-table">
+            <thead>
+            <tr>
+                <th>Nº</th>
+                <th>Valor Total</th>
+                <th>Juros</th>
+                <th>Amortização</th>
+                <th>Saldo Devedor</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="parcela : ${listaParcelasPrice}">
+                <td th:text="${parcela.numeroParcela}">1</td>
+                <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.000,00</td>
+                <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">R$ 250,00</td>
+                <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">R$ 750,00</td>
+                <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.saldoDevedor, 0, 'COMMA', 2, 'POINT')}">R$ 9.250,00</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="limite-info">
+            <p>💡 <strong>PRICE:</strong> Parcelas fixas facilitam o planejamento financeiro e garantem previsibilidade no orçamento</p>
+        </div>
+
+        <!-- Box Destaque -->
+        <div class="destaque-box">
+            <h3>💰 Qual escolher?</h3>
+            <p><strong>SAC:</strong> Ideal para quem pode pagar mais no início e quer economia total</p>
+            <p><strong>PRICE:</strong> Ideal para quem prefere parcelas fixas e previsibilidade</p>
+        </div>
+
+        <div class="download-box">
+            <p>📄 Para visualizar TODAS as parcelas de ambas as modalidades, faça o download do PDF comparativo em anexo!</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Atenciosamente,</p>
+        <p class="signature">Equipe AGIMOB</p>
+    </div>
+</div>
 </body>
 </html>
