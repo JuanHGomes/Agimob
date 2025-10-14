@@ -237,7 +237,7 @@
         </tr>
         <tr>
             <td class="label">Taxa de Juros</td>
-            <td class="value" th:text="${#numbers.formatDecimal(taxaJuros, 0, 'COMMA', 2, 'POINT')} + '% ao mês'">1,50% ao mês</td>
+            <td class="value" th:text="${#numbers.formatDecimal(informacoesAdicionais.taxa, 0, 'COMMA', 2, 'POINT')} + '% ao Ano'">1,50% ao mês</td>
         </tr>
         <tr>
             <td class="label">Número de Parcelas</td>
@@ -245,11 +245,11 @@
         </tr>
         <tr>
             <td class="label">Total de Juros</td>
-            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(totalJuros, 0, 'COMMA', 2, 'POINT')}">R$ 45.000,00</td>
+            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionais.valorTotalJuros(), 0, 'COMMA', 2, 'POINT')}">R$ 45.000,00</td>
         </tr>
         <tr>
             <td class="label">Valor Total a Pagar</td>
-            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(valorTotal, 0, 'COMMA', 2, 'POINT')}">R$ 145.000,00</td>
+            <td class="value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionais.valorTotalFinanciamento(), 0, 'COMMA', 2, 'POINT')}">R$ 145.000,00</td>
         </tr>
     </table>
 

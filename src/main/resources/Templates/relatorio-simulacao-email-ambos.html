@@ -414,7 +414,7 @@
             <p><strong>PRICE (Tabela Price):</strong> Parcelas fixas durante todo o financiamento</p>
         </div>
 
-        <div class="cliente-agi-section" th:if="${dadosClienteAgiSac != null && dadosClienteAgiPrice != null}">
+        <div class="cliente-agi-section" th:if="${tipoUsuario == 'CLIENTE'}">
             <div class="cliente-agi-header">
                 <h3>⭐ Condições Especiais para Cliente AGI</h3>
                 <p>Veja as vantagens exclusivas com nossa taxa diferenciada</p>
@@ -428,31 +428,31 @@
                     <div class="agi-card-body">
                         <div class="agi-info-row">
                             <span class="agi-label">Taxa AGI de até:</span>
-                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgiSac.taxa*100, 0, 'COMMA', 2, 'POINT')} + '% ao ano'">1,20% ao mês</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(informacoesAdicionaisSac.taxa*100, 0, 'COMMA', 2, 'POINT')} + '% ao ano'">1,20% ao mês</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Primeira Parcela:</span>
-                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiSac.primeiraParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.500,00</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisSac.primeiraParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.500,00</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Última Parcela:</span>
-                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiSac.ultimaParcela, 0, 'COMMA', 2, 'POINT')}">R$ 850,00</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisSac.ultimaParcela, 0, 'COMMA', 2, 'POINT')}">R$ 850,00</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Total de Juros:</span>
-                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiSac.valorTotalJuros, 0, 'COMMA', 2, 'POINT')}">R$ 35.000,00</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisSac.valorTotalJuros, 0, 'COMMA', 2, 'POINT')}">R$ 35.000,00</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Renda Comprometida:</span>
-                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgiSac.rendaComprometida, 0, 'COMMA', 2, 'POINT')} + '%'">28,50%</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(informacoesAdicionaisSac.rendaComprometida, 0, 'COMMA', 2, 'POINT')} + '%'">28,50%</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Total Pago ao Final:</span>
-                            <span class="agi-value destaque" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiSac.valorTotalFinanciamento, 0, 'COMMA', 2, 'POINT')}">R$ 135.000,00</span>
+                            <span class="agi-value destaque" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisSac.valorTotalFinanciamento, 0, 'COMMA', 2, 'POINT')}">R$ 135.000,00</span>
                         </div>
                         <div class="agi-economia">
                             <span>💰 Você economiza até:</span>
-                            <strong th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiSac.diferencaPriceSac, 0, 'COMMA', 2, 'POINT')}">R$ 10.000,00</strong>
+                            <strong th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisSac.diferencaPriceSac, 0, 'COMMA', 2, 'POINT')}">R$ 10.000,00</strong>
                         </div>
                     </div>
                 </div>
@@ -464,27 +464,27 @@
                     <div class="agi-card-body">
                         <div class="agi-info-row">
                             <span class="agi-label">Taxa AGI de até:</span>
-                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgiPrice.taxa*100, 0, 'COMMA', 2, 'POINT')} + '% ao mês'">1,20% ao mês</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(informacoesAdicionaisPrice.taxa*100, 0, 'COMMA', 2, 'POINT')} + '% ao mês'">1,20% ao mês</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Parcela Fixa:</span>
-                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiPrice.primeiraParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.200,00</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisPrice.primeiraParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.200,00</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Total de Juros:</span>
-                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiPrice.valorTotalJuros, 0, 'COMMA', 2, 'POINT')}">R$ 40.000,00</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisPrice.valorTotalJuros, 0, 'COMMA', 2, 'POINT')}">R$ 40.000,00</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Renda Comprometida:</span>
-                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgiPrice.rendaComprometida, 0, 'COMMA', 2, 'POINT')} + '%'">25,00%</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(informacoesAdicionaisPrice.rendaComprometida, 0, 'COMMA', 2, 'POINT')} + '%'">25,00%</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Total Pago ao Final:</span>
-                            <span class="agi-value destaque" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiPrice.valorTotalFinanciamento, 0, 'COMMA', 2, 'POINT')}">R$ 140.000,00</span>
+                            <span class="agi-value destaque" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisPrice.valorTotalFinanciamento, 0, 'COMMA', 2, 'POINT')}">R$ 140.000,00</span>
                         </div>
                         <div class="agi-economia">
                             <span>💰 Você economiza até:</span>
-                            <strong th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiPrice.diferencaPriceSac, 0, 'COMMA', 2, 'POINT')}">R$ 8.000,00</strong>
+                            <strong th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionaisPrice.diferencaPriceSac, 0, 'COMMA', 2, 'POINT')}">R$ 8.000,00</strong>
                         </div>
                     </div>
                 </div>

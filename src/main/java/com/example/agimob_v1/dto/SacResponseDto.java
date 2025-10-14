@@ -7,8 +7,7 @@ import java.util.List;
 @Builder
 public record SacResponseDto(
         List<ParcelaDto> parcelas,
-        InformacoesAdicionaisDto informacoesAdicionais,
-        InformacoesAdicionaisDto informacoesAdicionaisClienteAgi
+        InformacoesAdicionaisDto informacoesAdicionais
 ) {
 
 }

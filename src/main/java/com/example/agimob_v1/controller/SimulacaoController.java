@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/agimob/simulacao")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class SimulacaoController {
 
     private final SimulacaoService simulacaoService;
@@ -37,14 +36,14 @@ public class SimulacaoController {
 
     }
 
-    @PostMapping("/enviarSimulacao/{emailUsuario}/{idSimulacao}")
-    public ResponseEntity<Void> enviarSimulacao(@PathVariable String emailUsuario, @PathVariable Long idSimulacao) throws Exception {
-        return emailService.enviarEmail(emailUsuario, idSimulacao);
+    @PostMapping("/enviarSimulacao/{emailUsuario}")
+    public ResponseEntity<Void> enviarSimulacao(@PathVariable String emailUsuario, @RequestBody SimulacaoResponseDto response) throws Exception {
+        return emailService.enviarEmail(emailUsuario, response);
     }
 
-    @PostMapping("/baixarSimulacao/{idSimulacao}")
-    public ResponseEntity<byte[]> baixarSimulacao(@PathVariable Long idSimulacao) {
-        return pdfService.baixarPdf(idSimulacao);
+    @PostMapping("/baixarSimulacao")
+    public ResponseEntity<byte[]> baixarSimulacao(@RequestBody SimulacaoResponseDto simulacaoResponse) {
+        return pdfService.baixarPdf(simulacaoResponse);
     }
 
 

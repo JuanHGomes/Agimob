@@ -305,7 +305,7 @@
             <p>Obrigado por simular com o AGIMOB! Sua simulação do tipo <span class="tipo-simulacao" th:text="${tipoSimulacao}">SAC</span> foi processada com sucesso.</p>
         </div>
 
-        <div class="cliente-agi-section" th:if="${dadosClienteAgi != null}">
+        <div class="cliente-agi-section" th:if="${tipoUsuario == 'CLIENTE'}">
             <div class="cliente-agi-header">
                 <h3>⭐ Condições Especiais para Cliente AGI</h3>
                 <p>Veja as vantagens exclusivas com nossa taxa diferenciada</p>
@@ -314,36 +314,36 @@
             <div class="cliente-agi-cards">
                 <div class="agi-card">
                     <div class="agi-card-header">
-                        <h4>SAC - Cliente AGI</h4>
+                        <h4>Cliente AGI</h4>
                     </div>
                     <div class="agi-card-body">
                         <div class="agi-info-row">
                             <span class="agi-label">Taxa AGI de até:</span>
-                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgi.taxa*100, 0, 'COMMA', 2, 'POINT')} + '% ao ano'">1,20% ao mês</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(informacoesAdicionais.taxa*100, 0, 'COMMA', 2, 'POINT')} + '% ao ano'">1,20% ao mês</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Primeira Parcela:</span>
-                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgi.primeiraParcela(), 0, 'COMMA', 2, 'POINT')}">R$ 1.500,00</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionais.primeiraParcela(), 0, 'COMMA', 2, 'POINT')}">R$ 1.500,00</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Última Parcela:</span>
-                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgi.ultimaParcela, 0, 'COMMA', 2, 'POINT')}">R$ 850,00</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionais.ultimaParcela, 0, 'COMMA', 2, 'POINT')}">R$ 850,00</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Total de Juros:</span>
-                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgi.valorTotalJuros, 0, 'COMMA', 2, 'POINT')}">R$ 35.000,00</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionais.valorTotalJuros, 0, 'COMMA', 2, 'POINT')}">R$ 35.000,00</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Renda Comprometida:</span>
-                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgi.rendaComprometida, 0, 'COMMA', 2, 'POINT')} + '%'">28,50%</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(informacoesAdicionais.rendaComprometida, 0, 'COMMA', 2, 'POINT')} + '%'">28,50%</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Total Pago ao Final:</span>
-                            <span class="agi-value destaque" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgi.valorTotalFinanciamento, 0, 'COMMA', 2, 'POINT')}">R$ 135.000,00</span>
+                            <span class="agi-value destaque" th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionais.valorTotalFinanciamento, 0, 'COMMA', 2, 'POINT')}">R$ 135.000,00</span>
                         </div>
                         <div class="agi-economia">
                             <span>💰 Você economiza até:</span>
-                            <strong th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgi.diferencaPriceSac, 0, 'COMMA', 2, 'POINT')}">R$ 10.000,00</strong>
+                            <strong th:text="'R$ ' + ${#numbers.formatDecimal(informacoesAdicionais.diferencaPriceSac, 0, 'COMMA', 2, 'POINT')}">R$ 10.000,00</strong>
                         </div>
                     </div>
                 </div>

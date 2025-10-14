@@ -1,5 +1,6 @@
 package com.example.agimob_v1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class Usuario {
     private int idScore;
 
     @OneToMany(mappedBy = "usuario")
+    @JsonIgnore
     private List<Simulacao> simulacoes;
 
     public Usuario(String email){

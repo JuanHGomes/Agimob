@@ -1,6 +1,7 @@
 package com.example.agimob_v1.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -28,6 +29,7 @@ public class Taxa {
     private LocalDateTime dataFim;
 
     @OneToMany(mappedBy = "id_taxa")
+    @JsonManagedReference
     private List<Simulacao> simulacoes;
 
     @Column(name = "risco")

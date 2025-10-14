@@ -7,7 +7,7 @@ import java.util.List;
 @Builder
 public record PriceResponseDto(
         List<ParcelaDto> parcelas,
-        InformacoesAdicionaisDto informacoesAdicionais,
-        InformacoesAdicionaisDto informacoesAdicionaisClienteAgi
+        InformacoesAdicionaisDto informacoesAdicionais
+
 ) {
 }

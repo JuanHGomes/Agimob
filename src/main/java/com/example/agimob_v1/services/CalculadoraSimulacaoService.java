@@ -21,100 +21,65 @@
 
         public SimulacaoResponseDto calcularParcelas(Simulacao simulacao){
 
-            Taxa taxaPadrao = taxaService.getTaxaPadraoVigente();
+
+            Taxa taxa;
+
+            if(simulacao.getTipoUsuario().equalsIgnoreCase("CLIENTE")){
+                taxa = taxaService.determinarTaxa(simulacao);
+            }else {
+                taxa = taxaService.getTaxaPadraoVigente();
+            }
 
           if(simulacao.getTipo_modalidade().equalsIgnoreCase("SAC")){
 
-                   List<ParcelaDto> parcelas = sac(simulacao, taxaPadrao);
-                   InformacoesAdicionaisDto informacoesAdicionais = calcularInformacoesAdicionais(simulacao, parcelas, taxaPadrao);
-                   SacResponseDto sacResponseDto;
 
-                   if(simulacao.getTipoUsuario().equalsIgnoreCase("CLIENTE")){
+              List<ParcelaDto> parcelas = sac(simulacao, taxa);
+              InformacoesAdicionaisDto informacoesAdicionais = calcularInformacoesAdicionais(simulacao, parcelas, taxa);
 
-                      InformacoesAdicionaisDto informacoesAdicionaisClienteAgi = calcularInformacoesClienteAgi(simulacao, simulacao.getTipo_modalidade());
+              SacResponseDto sacResponse = SacResponseDto.builder()
+                      .parcelas(parcelas)
+                      .informacoesAdicionais(informacoesAdicionais)
+                      .build();
 
-                      sacResponseDto = SacResponseDto.builder()
-                               .parcelas(parcelas)
-                               .informacoesAdicionais(informacoesAdicionais)
-                               .informacoesAdicionaisClienteAgi(informacoesAdicionaisClienteAgi)
-                               .build();
-                   }
-                   else{
 
-                     sacResponseDto = SacResponseDto.builder()
-                               .parcelas(parcelas)
-                               .informacoesAdicionais(informacoesAdicionais)
-                               .build();
-                   }
-              return simulacaoResponseDtoMapper.toSacReponseDto(simulacao.getId(), simulacao.getTipo_modalidade(), sacResponseDto);
+              return simulacaoResponseDtoMapper.toSacReponseDto(simulacao.getId(), simulacao.getTipo_modalidade(), taxa, simulacao.getTipoUsuario(), sacResponse);
            }
             else if(simulacao.getTipo_modalidade().equalsIgnoreCase("PRICE")){
 
-                List<ParcelaDto> parcelas = price(simulacao, taxaPadrao);
-                InformacoesAdicionaisDto informacoesAdicionais = calcularInformacoesAdicionais(simulacao, parcelas, taxaPadrao);
-                PriceResponseDto priceResponseDto;
 
-                if(simulacao.getTipoUsuario().equalsIgnoreCase("CLIENTE")){
+              List<ParcelaDto> parcelas = price(simulacao, taxa);
+              InformacoesAdicionaisDto informacoesAdicionais = calcularInformacoesAdicionais(simulacao, parcelas, taxa);
 
-                    InformacoesAdicionaisDto informacoesAdicionaisClienteAgi = calcularInformacoesClienteAgi(simulacao, simulacao.getTipo_modalidade());
+              PriceResponseDto priceResponse = PriceResponseDto.builder()
+                      .parcelas(parcelas)
+                      .informacoesAdicionais(informacoesAdicionais)
+                      .build();
 
-                    priceResponseDto = PriceResponseDto.builder()
-                            .parcelas(parcelas)
-                            .informacoesAdicionais(informacoesAdicionais)
-                            .informacoesAdicionaisClienteAgi(informacoesAdicionaisClienteAgi)
-                            .build();
-                }
-                else{
 
-                    priceResponseDto = PriceResponseDto.builder()
-                            .parcelas(parcelas)
-                            .informacoesAdicionais(informacoesAdicionais)
-                            .build();
-                }
-                return simulacaoResponseDtoMapper.toPriceReponseDto(simulacao.getId(), simulacao.getTipo_modalidade(), priceResponseDto);
+              return simulacaoResponseDtoMapper.toPriceReponseDto(simulacao.getId(), simulacao.getTipo_modalidade(),taxa, simulacao.getTipoUsuario(), priceResponse);
             }
             else{
 
-              List<ParcelaDto> parcelasSac = sac(simulacao, taxaPadrao);
-              List<ParcelaDto> parcelasPrice = price(simulacao, taxaPadrao);
+              List<ParcelaDto> parcelasSac = sac(simulacao, taxa);
+              List<ParcelaDto> parcelasPrice = price(simulacao, taxa);
 
-              InformacoesAdicionaisDto informacoesAdicionaisSac = calcularInformacoesAdicionais(simulacao, parcelasSac, taxaPadrao);
-              InformacoesAdicionaisDto informacoesAdicionaisPrice = calcularInformacoesAdicionais(simulacao, parcelasPrice, taxaPadrao);
+              InformacoesAdicionaisDto informacoesAdicionaisSac = calcularInformacoesAdicionais(simulacao, parcelasSac, taxa);
+              InformacoesAdicionaisDto informacoesAdicionaisPrice = calcularInformacoesAdicionais(simulacao, parcelasPrice, taxa);
 
-              SacResponseDto sacResponse;
-              PriceResponseDto priceResponse;
+              SacResponseDto sacResponse = SacResponseDto.builder()
+                      .parcelas(parcelasSac)
+                      .informacoesAdicionais(informacoesAdicionaisSac)
+                      .build();
 
-              if(simulacao.getTipoUsuario().equalsIgnoreCase("CLIENTE")){
 
-                  InformacoesAdicionaisDto informacoesAdicionaisClienteAgiSac = calcularInformacoesClienteAgi(simulacao, "SAC");
-                  InformacoesAdicionaisDto informacoesAdicionaisClienteAgiPrice = calcularInformacoesClienteAgi(simulacao, "PRICE");
+              PriceResponseDto priceResponse = PriceResponseDto.builder()
+                      .parcelas(parcelasPrice)
+                      .informacoesAdicionais(informacoesAdicionaisPrice)
+                      .build();
 
-                   sacResponse = SacResponseDto.builder()
-                          .parcelas(parcelasSac)
-                          .informacoesAdicionais(informacoesAdicionaisSac)
-                          .informacoesAdicionaisClienteAgi(informacoesAdicionaisClienteAgiSac)
-                          .build();
 
-                   priceResponse = PriceResponseDto.builder()
-                          .parcelas(parcelasPrice)
-                          .informacoesAdicionais(informacoesAdicionaisPrice)
-                          .informacoesAdicionaisClienteAgi(informacoesAdicionaisClienteAgiPrice)
-                          .build();
-              }
-              else{
 
-                   sacResponse = SacResponseDto.builder()
-                          .parcelas(parcelasSac)
-                          .informacoesAdicionais(informacoesAdicionaisSac)
-                          .build();
-
-                   priceResponse = PriceResponseDto.builder()
-                          .parcelas(parcelasPrice)
-                          .informacoesAdicionais(informacoesAdicionaisPrice)
-                          .build();
-              }
-
-              return simulacaoResponseDtoMapper.toAmbosResponseDto(simulacao.getId(), simulacao.getTipo_modalidade(), sacResponse, priceResponse);
+              return simulacaoResponseDtoMapper.toAmbosResponseDto(simulacao.getId(), simulacao.getTipo_modalidade(), taxa, simulacao.getTipoUsuario(),  sacResponse, priceResponse);
 
 
             }
@@ -188,23 +153,7 @@
 
         }
 
-        public InformacoesAdicionaisDto calcularInformacoesClienteAgi(Simulacao simulacao,String modalidade){
 
-            Taxa taxaPorScore = taxaService.determinarTaxa(simulacao);
-
-            if(modalidade.equalsIgnoreCase("SAC")){
-
-                List<ParcelaDto> parcelas = sac(simulacao, taxaPorScore);
-
-               return calcularInformacoesAdicionais(simulacao, parcelas, taxaPorScore);
-
-            }
-
-                List<ParcelaDto> parcelas = price(simulacao, taxaPorScore);
-
-                return calcularInformacoesAdicionais(simulacao, parcelas, taxaPorScore);
-
-        }
 
         public InformacoesAdicionaisDto calcularInformacoesAdicionais(Simulacao simulacao, List<ParcelaDto> parcelas, Taxa taxa){
 

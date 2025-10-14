@@ -1,5 +1,6 @@
 package com.example.agimob_v1.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,6 +48,7 @@ public class Simulacao {
 
     @ManyToOne
     @JoinColumn(name = "id_taxa")
+    @JsonBackReference
     private Taxa id_taxa;
 
 
