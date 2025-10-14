@@ -28,7 +28,7 @@
         }
 
         .header {
-            background-color: #0066cc;
+            background-color: #3858ff;
             padding: 25px;
             text-align: center;
             color: #ffffff;
@@ -47,50 +47,50 @@
         }
 
         .info-section {
-            background-color: #e8f5e9;
-            border-left: 5px solid #4caf50;
+            background-color: #eafcf2;
+            border-left: 5px solid #43df8c;
             padding: 15px;
             margin-bottom: 20px;
         }
 
         .info-section p {
-            color: #2e7d32;
+            color: #2b9c64;
             font-size: 11pt;
             margin: 5px 0;
         }
 
         .info-label {
             font-weight: bold;
-            color: #1b5e20;
+            color: #1e8452;
         }
 
         .tipo-simulacao {
-            color: #0066cc;
+            color: #3858ff;
             font-weight: bold;
         }
 
         .section-title {
-            color: #0066cc;
+            color: #3858ff;
             font-size: 16pt;
             font-weight: bold;
             margin: 25px 0 15px 0;
             padding-bottom: 8px;
-            border-bottom: 3px solid #4caf50;
+            border-bottom: 3px solid #43df8c;
         }
 
         .subsection-title {
-            color: #0066cc;
+            color: #3858ff;
             font-size: 14pt;
             font-weight: bold;
             margin: 20px 0 10px 0;
             padding: 10px;
-            background-color: #e3f2fd;
-            border-left: 4px solid #0066cc;
+            background-color: #e7eaff;
+            border-left: 4px solid #3858ff;
         }
 
         .comparacao-box {
-            background-color: #fff3e0;
-            border: 2px solid #ff9800;
+            background-color: #e7eaff;
+            border: 2px solid #3858ff;
             border-radius: 5px;
             padding: 15px;
             margin-bottom: 20px;
@@ -98,13 +98,13 @@
         }
 
         .comparacao-box h3 {
-            color: #e65100;
+            color: #3858ff;
             font-size: 13pt;
             margin-bottom: 10px;
         }
 
         .comparacao-box p {
-            color: #666666;
+            color: #333;
             font-size: 10pt;
             margin: 5px 0;
         }
@@ -117,24 +117,31 @@
         }
 
         .parcela-table thead {
-            background-color: #0066cc;
             color: #ffffff;
         }
 
         .parcela-table.sac-table thead {
-            background-color: #1976d2;
+            background-color: #3858ff;
         }
 
         .parcela-table.price-table thead {
-            background-color: #388e3c;
+            background-color: #43df8c;
         }
 
         .parcela-table th {
             padding: 10px 8px;
-            text-align: left;
+            text-align: center;
             font-weight: bold;
             font-size: 10pt;
-            border: 1px solid #0052a3;
+            border: 1px solid #ddd;
+        }
+
+        .parcela-table.sac-table th {
+             border-color: #2a45cc;
+        }
+
+        .parcela-table.price-table th {
+            border-color: #30b871;
         }
 
         .parcela-table tbody tr {
@@ -162,51 +169,51 @@
         }
 
         .parcela-table.sac-table td.numero {
-            color: #1976d2;
+            color: #3858ff;
         }
 
         .parcela-table.price-table td.numero {
-            color: #388e3c;
+            color: #30b871;
         }
 
         .parcela-table td.valor {
-            text-align: right;
+            text-align: center;
         }
 
         .destaque-diferenca {
-            background-color: #fff9e6;
-            border: 2px dashed #ffc107;
+            background-color: #e7eaff;
+            border: 2px dashed #3858ff;
             padding: 15px;
             margin: 20px 0;
             text-align: center;
         }
 
         .destaque-diferenca h3 {
-            color: #f57c00;
+            color: #3858ff;
             font-size: 12pt;
             margin-bottom: 10px;
         }
 
         .destaque-diferenca p {
-            color: #666666;
+            color: #333;
             font-size: 11pt;
             margin: 5px 0;
         }
 
         .destaque-diferenca strong {
-            color: #e65100;
+            color: #2a45cc;
             font-size: 12pt;
         }
 
         .observacoes {
-            background-color: #fff9e6;
-            border-left: 5px solid #ffc107;
+            background-color: #f0f2ff;
+            border-left: 5px solid #3858ff;
             padding: 15px;
             margin: 20px 0;
         }
 
         .observacoes h3 {
-            color: #f57c00;
+            color: #3858ff;
             font-size: 12pt;
             margin-bottom: 10px;
         }
@@ -224,7 +231,7 @@
         .footer {
             margin-top: 30px;
             padding-top: 15px;
-            border-top: 3px solid #4caf50;
+            border-top: 3px solid #43df8c;
             text-align: center;
         }
 
@@ -235,7 +242,7 @@
         }
 
         .footer .signature {
-            color: #0066cc;
+            color: #3858ff;
             font-weight: bold;
             font-size: 12pt;
             margin-top: 10px;
@@ -254,26 +261,22 @@
 </head>
 <body>
 <div class="container">
-    <!-- Cabeçalho -->
     <div class="header">
         <h1>RELATÓRIO COMPARATIVO DE SIMULAÇÃO</h1>
         <p>Análise SAC vs PRICE - AGIMOB</p>
     </div>
 
-    <!-- Informações Gerais -->
     <div class="info-section">
         <p><span class="info-label">Tipo de Simulação:</span> <span class="tipo-simulacao">COMPARATIVA (SAC e PRICE)</span></p>
         <p><span class="info-label">Data da Simulação:</span> <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">13/10/2025 10:30</span></p>
     </div>
 
-    <!-- Box Explicativo -->
     <div class="comparacao-box">
         <h3>Comparação entre Modalidades</h3>
         <p><strong>SAC (Sistema de Amortização Constante):</strong> Parcelas decrescentes, amortização fixa</p>
         <p><strong>PRICE (Tabela Price):</strong> Parcelas fixas, amortização crescente</p>
     </div>
 
-    <!-- ========== SISTEMA SAC ========== -->
     <h2 class="section-title">Sistema SAC - Amortização Constante</h2>
 
     <div class="subsection-title">Detalhamento das Parcelas - SAC</div>
@@ -299,7 +302,6 @@
         </tbody>
     </table>
 
-    <!-- ========== TABELA PRICE ========== -->
     <div class="page-break"></div>
 
     <h2 class="section-title">Tabela PRICE - Parcelas Fixas</h2>
@@ -327,7 +329,6 @@
         </tbody>
     </table>
 
-    <!-- Box de Análise Comparativa -->
     <div class="destaque-diferenca">
         <h3>Análise Comparativa</h3>
         <p><strong>SAC:</strong> Primeira parcela mais alta, mas redução gradual ao longo do tempo</p>
@@ -335,7 +336,6 @@
         <p style="margin-top: 10px;"><strong>Escolha conforme seu perfil:</strong> SAC para quem pode pagar mais no início ou PRICE para previsibilidade</p>
     </div>
 
-    <!-- Observações -->
     <div class="observacoes">
         <h3>Observações Importantes</h3>
         <ul>
@@ -347,7 +347,6 @@
         </ul>
     </div>
 
-    <!-- Rodapé -->
     <div class="footer">
         <p>Este documento foi gerado automaticamente pelo sistema AGIMOB</p>
         <p class="signature">Equipe AGIMOB</p>

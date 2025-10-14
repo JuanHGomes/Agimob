@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${assunto}">Resultado da Simulação Comparativa</title>
+    <title th:text="${assunto}">Resultado da Simulação</title>
     <meta charset="UTF-8">
     <style>
         * {
@@ -27,7 +27,7 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #0066cc 0%, #004c99 100%);
+            background: linear-gradient(135deg, #3858ff 0%, #2a45cc 100%);
             padding: 30px;
             text-align: center;
             color: #ffffff;
@@ -49,50 +49,29 @@
         }
 
         .intro-box {
-            background-color: #e8f5e9;
-            border-left: 4px solid #4caf50;
+            background-color: #eafcf2;
+            border-left: 4px solid #43df8c;
             padding: 20px;
             margin-bottom: 30px;
             border-radius: 5px;
         }
 
         .intro-box p {
-            color: #2e7d32;
+            color: #2b9c64;
             font-size: 16px;
             margin: 0;
         }
 
         .tipo-simulacao {
-            color: #0066cc;
+            color: #3858ff;
             font-weight: bold;
             text-transform: uppercase;
         }
 
-        .comparacao-info {
-            background-color: #fff3e0;
-            border: 2px solid #ff9800;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .comparacao-info h3 {
-            color: #e65100;
-            font-size: 18px;
-            margin-bottom: 12px;
-        }
-
-        .comparacao-info p {
-            color: #666666;
-            font-size: 14px;
-            margin: 8px 0;
-        }
-
         /* Seção Cliente AGI */
         .cliente-agi-section {
-            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
-            border: 3px solid #9c27b0;
+            background: #f0f2ff;
+            border: 2px solid #3858ff;
             border-radius: 10px;
             padding: 25px;
             margin: 30px 0;
@@ -104,21 +83,23 @@
         }
 
         .cliente-agi-header h3 {
-            color: #6a1b9a;
+            color: #3858ff;
             font-size: 22px;
             font-weight: bold;
             margin-bottom: 8px;
         }
 
         .cliente-agi-header p {
-            color: #7b1fa2;
+            color: #555555;
             font-size: 15px;
         }
 
         .cliente-agi-cards {
             display: flex;
+            justify-content: center;
             gap: 15px;
             margin-top: 20px;
+            text-align: center;
         }
 
         .agi-card {
@@ -127,16 +108,14 @@
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             flex: 1;
+            max-width: 400px;
         }
 
         .agi-card-header {
             padding: 15px;
             color: #ffffff;
             text-align: center;
-        }
-
-        .agi-card.sac .agi-card-header {
-            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+            background: linear-gradient(135deg, #3858ff 0%, #2a45cc 100%);
         }
 
         .agi-card-header h4 {
@@ -157,7 +136,7 @@
         }
 
         .agi-info-row:last-of-type {
-            border-bottom: 2px solid #9c27b0;
+            border-bottom: 2px solid #3858ff;
             margin-bottom: 15px;
         }
 
@@ -174,12 +153,12 @@
         }
 
         .agi-value.destaque {
-            color: #9c27b0;
+            color: #3858ff;
             font-size: 16px;
         }
 
         .agi-economia {
-            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            background: linear-gradient(135deg, #43df8c 0%, #30b871 100%);
             color: #ffffff;
             padding: 15px;
             border-radius: 6px;
@@ -194,29 +173,12 @@
         }
 
         .section-title {
-            color: #0066cc;
+            color: #3858ff;
             font-size: 22px;
             font-weight: 600;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 3px solid #4caf50;
-        }
-
-        .subsection-title {
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 600;
-            padding: 12px 15px;
-            margin: 25px 0 15px 0;
-            border-radius: 5px;
-        }
-
-        .subsection-title.sac {
-            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
-        }
-
-        .subsection-title.price {
-            background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+            border-bottom: 3px solid #43df8c;
         }
 
         .parcela-table {
@@ -227,15 +189,8 @@
         }
 
         .parcela-table thead {
-            color: #0c37b8;
-        }
-
-        .parcela-table.sac-table thead {
-            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
-        }
-
-        .parcela-table.price-table thead {
-            background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+            background: linear-gradient(135deg, #3858ff 0%, #2a45cc 100%);
+            color: #ffffff;
         }
 
         .parcela-table th {
@@ -268,51 +223,11 @@
 
         .parcela-table td:first-child {
             font-weight: 600;
-        }
-
-        .parcela-table.sac-table td:first-child {
-            color: #1976d2;
-        }
-
-        .parcela-table.price-table td:first-child {
-            color: #388e3c;
-        }
-
-        .limite-info {
-            background-color: #e3f2fd;
-            border-left: 4px solid #2196f3;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-        }
-
-        .limite-info p {
-            color: #1565c0;
-            font-size: 14px;
-            margin: 0;
-        }
-
-        .destaque-box {
-            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-            color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            margin: 25px 0;
-        }
-
-        .destaque-box h3 {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .destaque-box p {
-            font-size: 15px;
-            margin: 5px 0;
+            color: #3858ff;
         }
 
         .download-box {
-            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            background: linear-gradient(135deg, #43df8c 0%, #30b871 100%);
             color: #ffffff;
             padding: 20px;
             border-radius: 8px;
@@ -329,7 +244,7 @@
         .footer {
             background-color: #f8f9fa;
             padding: 25px 30px;
-            border-top: 3px solid #4caf50;
+            border-top: 3px solid #43df8c;
         }
 
         .footer p {
@@ -339,7 +254,7 @@
         }
 
         .footer .signature {
-            color: #0066cc;
+            color: #3858ff;
             font-weight: 600;
             margin-top: 5px;
         }
@@ -365,10 +280,15 @@
 
             .cliente-agi-cards {
                 flex-direction: column;
+                align-items: center;
             }
 
             .cliente-agi-section {
                 padding: 15px;
+            }
+
+            .tabela-parcelas{
+                align-items: center;
             }
         }
     </style>
@@ -392,14 +312,14 @@
             </div>
 
             <div class="cliente-agi-cards">
-                <div class="agi-card sac">
+                <div class="agi-card">
                     <div class="agi-card-header">
                         <h4>SAC - Cliente AGI</h4>
                     </div>
                     <div class="agi-card-body">
                         <div class="agi-info-row">
                             <span class="agi-label">Taxa AGI de até:</span>
-                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgi.taxa*100, 0, 'COMMA', 2, 'POINT')} + '% ao mês'">1,20% ao mês</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgi.taxa*100, 0, 'COMMA', 2, 'POINT')} + '% ao ano'">1,20% ao mês</span>
                         </div>
                         <div class="agi-info-row">
                             <span class="agi-label">Primeira Parcela:</span>
@@ -443,8 +363,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="parcela : ${listaParcelas}">
-                <td th:text="${parcela.numeroParcela}">1</td>
+            <tr class="tabela-parcelas" th:each="parcela : ${listaParcelas}">
+                <td  th:text="${parcela.numeroParcela}">1</td>
                 <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.000,00</td>
                 <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">R$ 250,00</td>
                 <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">R$ 750,00</td>
