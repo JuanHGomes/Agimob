@@ -98,6 +98,8 @@ public class PdfService {
         context.setVariable("totalJuros", infosAdicionais.valorTotalJuros());
         context.setVariable("valorTotal", infosAdicionais.valorTotalFinanciamento());
 
+
+
         return templateEngine.process("relatorio-simulacao-pdf", context);
     }
 

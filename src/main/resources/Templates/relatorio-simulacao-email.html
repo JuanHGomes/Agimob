@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${assunto}"></title>
+    <title th:text="${assunto}">Resultado da Simulação Comparativa</title>
     <meta charset="UTF-8">
     <style>
         * {
@@ -68,6 +68,131 @@
             text-transform: uppercase;
         }
 
+        .comparacao-info {
+            background-color: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .comparacao-info h3 {
+            color: #e65100;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .comparacao-info p {
+            color: #666666;
+            font-size: 14px;
+            margin: 8px 0;
+        }
+
+        /* Seção Cliente AGI */
+        .cliente-agi-section {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border: 3px solid #9c27b0;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .cliente-agi-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cliente-agi-header h3 {
+            color: #6a1b9a;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .cliente-agi-header p {
+            color: #7b1fa2;
+            font-size: 15px;
+        }
+
+        .cliente-agi-cards {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .agi-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .agi-card-header {
+            padding: 15px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .agi-card.sac .agi-card-header {
+            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+        }
+
+        .agi-card-header h4 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .agi-card-body {
+            padding: 20px;
+        }
+
+        .agi-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .agi-info-row:last-of-type {
+            border-bottom: 2px solid #9c27b0;
+            margin-bottom: 15px;
+        }
+
+        .agi-label {
+            color: #666666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .agi-value {
+            color: #333333;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .agi-value.destaque {
+            color: #9c27b0;
+            font-size: 16px;
+        }
+
+        .agi-economia {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .agi-economia strong {
+            display: block;
+            font-size: 20px;
+            margin-top: 5px;
+        }
+
         .section-title {
             color: #0066cc;
             font-size: 22px;
@@ -75,6 +200,23 @@
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 3px solid #4caf50;
+        }
+
+        .subsection-title {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 12px 15px;
+            margin: 25px 0 15px 0;
+            border-radius: 5px;
+        }
+
+        .subsection-title.sac {
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+        }
+
+        .subsection-title.price {
+            background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
         }
 
         .parcela-table {
@@ -85,8 +227,15 @@
         }
 
         .parcela-table thead {
-            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
-            color: #ffffff;
+            color: #0c37b8;
+        }
+
+        .parcela-table.sac-table thead {
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+        }
+
+        .parcela-table.price-table thead {
+            background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
         }
 
         .parcela-table th {
@@ -119,7 +268,47 @@
 
         .parcela-table td:first-child {
             font-weight: 600;
-            color: #0066cc;
+        }
+
+        .parcela-table.sac-table td:first-child {
+            color: #1976d2;
+        }
+
+        .parcela-table.price-table td:first-child {
+            color: #388e3c;
+        }
+
+        .limite-info {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .limite-info p {
+            color: #1565c0;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .destaque-box {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .destaque-box h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .destaque-box p {
+            font-size: 15px;
+            margin: 5px 0;
         }
 
         .download-box {
@@ -173,6 +362,14 @@
                 padding: 8px 6px;
                 font-size: 12px;
             }
+
+            .cliente-agi-cards {
+                flex-direction: column;
+            }
+
+            .cliente-agi-section {
+                padding: 15px;
+            }
         }
     </style>
 </head>
@@ -186,6 +383,51 @@
     <div class="content">
         <div class="intro-box">
             <p>Obrigado por simular com o AGIMOB! Sua simulação do tipo <span class="tipo-simulacao" th:text="${tipoSimulacao}">SAC</span> foi processada com sucesso.</p>
+        </div>
+
+        <div class="cliente-agi-section" th:if="${dadosClienteAgi != null}">
+            <div class="cliente-agi-header">
+                <h3>⭐ Condições Especiais para Cliente AGI</h3>
+                <p>Veja as vantagens exclusivas com nossa taxa diferenciada</p>
+            </div>
+
+            <div class="cliente-agi-cards">
+                <div class="agi-card sac">
+                    <div class="agi-card-header">
+                        <h4>SAC - Cliente AGI</h4>
+                    </div>
+                    <div class="agi-card-body">
+                        <div class="agi-info-row">
+                            <span class="agi-label">Taxa AGI de até:</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgi.taxa*100, 0, 'COMMA', 2, 'POINT')} + '% ao mês'">1,20% ao mês</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Primeira Parcela:</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgi.primeiraParcela(), 0, 'COMMA', 2, 'POINT')}">R$ 1.500,00</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Última Parcela:</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgi.ultimaParcela, 0, 'COMMA', 2, 'POINT')}">R$ 850,00</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Total de Juros:</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgi.valorTotalJuros, 0, 'COMMA', 2, 'POINT')}">R$ 35.000,00</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Renda Comprometida:</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgi.rendaComprometida, 0, 'COMMA', 2, 'POINT')} + '%'">28,50%</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Total Pago ao Final:</span>
+                            <span class="agi-value destaque" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgi.valorTotalFinanciamento, 0, 'COMMA', 2, 'POINT')}">R$ 135.000,00</span>
+                        </div>
+                        <div class="agi-economia">
+                            <span>💰 Você economiza até:</span>
+                            <strong th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgi.diferencaPriceSac, 0, 'COMMA', 2, 'POINT')}">R$ 10.000,00</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <h2 class="section-title">📊 Detalhes da Simulação</h2>

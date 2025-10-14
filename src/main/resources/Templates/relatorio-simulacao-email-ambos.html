@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -87,6 +88,129 @@
             color: #666666;
             font-size: 14px;
             margin: 8px 0;
+        }
+
+        /* Seção Cliente AGI */
+        .cliente-agi-section {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border: 3px solid #9c27b0;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .cliente-agi-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cliente-agi-header h3 {
+            color: #6a1b9a;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .cliente-agi-header p {
+            color: #7b1fa2;
+            font-size: 15px;
+        }
+
+        .cliente-agi-cards {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .agi-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .agi-card-header {
+            padding: 15px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .agi-card.sac .agi-card-header {
+            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+        }
+
+        .agi-card.price .agi-card-header {
+            background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+        }
+
+        .agi-card-header h4 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .agi-card-body {
+            padding: 20px;
+        }
+
+        .agi-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .agi-info-row:last-of-type {
+            border-bottom: 2px solid #9c27b0;
+            margin-bottom: 15px;
+        }
+
+        .agi-label {
+            color: #666666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .agi-value {
+            color: #333333;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .agi-value.destaque {
+            color: #9c27b0;
+            font-size: 16px;
+        }
+
+        .agi-economia {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .agi-economia strong {
+            display: block;
+            font-size: 20px;
+            margin-top: 5px;
+        }
+
+        .agi-destaque-final {
+            background-color: #ffffff;
+            border: 2px dashed #9c27b0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .agi-destaque-final p {
+            color: #6a1b9a;
+            font-size: 15px;
+            margin: 0;
         }
 
         .section-title {
@@ -258,6 +382,14 @@
                 padding: 8px 6px;
                 font-size: 12px;
             }
+
+            .cliente-agi-cards {
+                flex-direction: column;
+            }
+
+            .cliente-agi-section {
+                padding: 15px;
+            }
         }
     </style>
 </head>
@@ -277,6 +409,89 @@
             <h3>🔍 Entenda as Diferenças</h3>
             <p><strong>SAC (Sistema de Amortização Constante):</strong> Parcelas decrescentes com amortização fixa</p>
             <p><strong>PRICE (Tabela Price):</strong> Parcelas fixas durante todo o financiamento</p>
+        </div>
+
+        <div class="cliente-agi-section" th:if="${dadosClienteAgiSac != null && dadosClienteAgiPrice != null}">
+            <div class="cliente-agi-header">
+                <h3>⭐ Condições Especiais para Cliente AGI</h3>
+                <p>Veja as vantagens exclusivas com nossa taxa diferenciada</p>
+            </div>
+
+            <div class="cliente-agi-cards">
+                <!-- Card SAC Cliente AGI -->
+                <div class="agi-card sac">
+                    <div class="agi-card-header">
+                        <h4>SAC - Cliente AGI</h4>
+                    </div>
+                    <div class="agi-card-body">
+                        <div class="agi-info-row">
+                            <span class="agi-label">Taxa AGI:</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgiSac.taxa*100, 0, 'COMMA', 2, 'POINT')} + '% ao mês'">1,20% ao mês</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Primeira Parcela:</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiSac.primeiraParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.500,00</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Última Parcela:</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiSac.ultimaParcela, 0, 'COMMA', 2, 'POINT')}">R$ 850,00</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Total de Juros:</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiSac.valorTotalJuros, 0, 'COMMA', 2, 'POINT')}">R$ 35.000,00</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Renda Comprometida:</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgiSac.rendaComprometida, 0, 'COMMA', 2, 'POINT')} + '%'">28,50%</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Total Pago ao Final:</span>
+                            <span class="agi-value destaque" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiSac.valorTotalFinanciamento, 0, 'COMMA', 2, 'POINT')}">R$ 135.000,00</span>
+                        </div>
+                        <div class="agi-economia">
+                            <span>💰 Você economiza:</span>
+                            <strong th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiSac.diferencaPriceSac, 0, 'COMMA', 2, 'POINT')}">R$ 10.000,00</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card PRICE Cliente AGI -->
+                <div class="agi-card price">
+                    <div class="agi-card-header">
+                        <h4>PRICE - Cliente AGI</h4>
+                    </div>
+                    <div class="agi-card-body">
+                        <div class="agi-info-row">
+                            <span class="agi-label">Taxa AGI:</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgiPrice.taxa*100, 0, 'COMMA', 2, 'POINT')} + '% ao mês'">1,20% ao mês</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Parcela Fixa:</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiPrice.primeiraParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.200,00</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Total de Juros:</span>
+                            <span class="agi-value" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiPrice.valorTotalJuros, 0, 'COMMA', 2, 'POINT')}">R$ 40.000,00</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Renda Comprometida:</span>
+                            <span class="agi-value" th:text="${#numbers.formatDecimal(dadosClienteAgiPrice.rendaComprometida, 0, 'COMMA', 2, 'POINT')} + '%'">25,00%</span>
+                        </div>
+                        <div class="agi-info-row">
+                            <span class="agi-label">Total Pago ao Final:</span>
+                            <span class="agi-value destaque" th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiPrice.valorTotalFinanciamento, 0, 'COMMA', 2, 'POINT')}">R$ 140.000,00</span>
+                        </div>
+                        <div class="agi-economia">
+                            <span>💰 Você economiza:</span>
+                            <strong th:text="'R$ ' + ${#numbers.formatDecimal(dadosClienteAgiPrice.diferencaPriceSac, 0, 'COMMA', 2, 'POINT')}">R$ 8.000,00</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="agi-destaque-final">
+                <p>🎯 <strong>Vantagem Cliente AGI:</strong> Taxa reduzida que gera economia significativa em ambas as modalidades!</p>
+            </div>
         </div>
 
         <!-- ========== TABELA SAC ========== -->
