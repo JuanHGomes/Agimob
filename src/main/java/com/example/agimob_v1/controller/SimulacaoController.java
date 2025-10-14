@@ -47,10 +47,7 @@ public class SimulacaoController {
         return pdfService.baixarPdf(idSimulacao);
     }
 
-    @GetMapping("/scoreApi/{id}")
-    public ResponseEntity<ScoreDto> score(String cpf){
-        return scoreApiService.consultarScore(cpf);
-    }
+
 
 
 

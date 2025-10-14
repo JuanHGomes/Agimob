@@ -35,7 +35,7 @@ public class TaxaService {
 
     private Taxa determinarTaxaPorScore(String cpfUsuario){
 
-        ScoreDto analiseScore = scoreApiService.consultarScore(cpfUsuario).getBody();
+        ScoreDto analiseScore = scoreApiService.consultarScore(cpfUsuario).join().getBody();
 
         return taxaRepository.findVigenteByRisco(analiseScore.typeOfRisk(), LocalDateTime.now()).orElseThrow();
 
