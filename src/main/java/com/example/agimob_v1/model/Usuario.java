@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class Usuario {
 
     @Column(unique = true, name="email")
     private String email;
+
 
     @Column(name = "cpf", unique = true)
     private String cpf;
