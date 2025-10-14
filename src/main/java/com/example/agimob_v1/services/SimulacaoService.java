@@ -58,9 +58,7 @@ public class SimulacaoService {
             setUsuarioSimulacao(clienteAgi, simulacaoSalva.getId());
         }
 
-
         return calculadoraSimulacaoService.calcularParcelas(simulacao);
-
     }
 
     public Simulacao localizarSimulacao(Long idSimulacao){
@@ -91,10 +89,7 @@ public class SimulacaoService {
             throw new ValorForaDaFaixaException("O Prazo precisa estar entre 1 e 35 anos!");
         }
 
-
     }
-
-
 
 }
 

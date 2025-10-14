@@ -15,14 +15,6 @@ public class SimulacaoResponseDto {
     private SacResponseDto sac;
     private PriceResponseDto price;
 
-    /*
-    private List<ParcelaDto> parcelasSac;
-    private InformacoesAdicionaisDto informacoesAdicionaisSac;
-    private List<ParcelaDto> parcelasPrice;
-    private InformacoesAdicionaisDto informacoesAdicionaisPrice;
-    private InformacoesAdicionaisClienteAgiDto informacoesClienteAgi;
-    */
-
 }
 
 

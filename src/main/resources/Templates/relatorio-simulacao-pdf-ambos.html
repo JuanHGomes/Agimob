@@ -1,60 +1,358 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${assunto}"></title>
+    <title th:text="${assunto}">Relatório de Simulação Comparativa</title>
+    <meta charset="UTF-8"/>
     <style>
-        body { font-family: Arial, sans-serif; }
-        .parcela-table { width: 100%; border-collapse: collapse; }
-        .parcela-table th, .parcela-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            line-height: 1.5;
+            font-size: 11pt;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .header {
+            background-color: #0066cc;
+            padding: 25px;
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .header h1 {
+            font-size: 24pt;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 11pt;
+        }
+
+        .info-section {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-section p {
+            color: #2e7d32;
+            font-size: 11pt;
+            margin: 5px 0;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #1b5e20;
+        }
+
+        .tipo-simulacao {
+            color: #0066cc;
+            font-weight: bold;
+        }
+
+        .section-title {
+            color: #0066cc;
+            font-size: 16pt;
+            font-weight: bold;
+            margin: 25px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #4caf50;
+        }
+
+        .subsection-title {
+            color: #0066cc;
+            font-size: 14pt;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            padding: 10px;
+            background-color: #e3f2fd;
+            border-left: 4px solid #0066cc;
+        }
+
+        .comparacao-box {
+            background-color: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .comparacao-box h3 {
+            color: #e65100;
+            font-size: 13pt;
+            margin-bottom: 10px;
+        }
+
+        .comparacao-box p {
+            color: #666666;
+            font-size: 10pt;
+            margin: 5px 0;
+        }
+
+        .parcela-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            font-size: 10pt;
+        }
+
+        .parcela-table thead {
+            background-color: #0066cc;
+            color: #ffffff;
+        }
+
+        .parcela-table.sac-table thead {
+            background-color: #1976d2;
+        }
+
+        .parcela-table.price-table thead {
+            background-color: #388e3c;
+        }
+
+        .parcela-table th {
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 10pt;
+            border: 1px solid #0052a3;
+        }
+
+        .parcela-table tbody tr {
+            border: 1px solid #e0e0e0;
+        }
+
+        .parcela-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .parcela-table tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        .parcela-table td {
+            padding: 8px;
+            color: #333333;
+            font-size: 10pt;
+            border: 1px solid #e0e0e0;
+        }
+
+        .parcela-table td.numero {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .parcela-table.sac-table td.numero {
+            color: #1976d2;
+        }
+
+        .parcela-table.price-table td.numero {
+            color: #388e3c;
+        }
+
+        .parcela-table td.valor {
+            text-align: right;
+        }
+
+        .destaque-diferenca {
+            background-color: #fff9e6;
+            border: 2px dashed #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .destaque-diferenca h3 {
+            color: #f57c00;
+            font-size: 12pt;
+            margin-bottom: 10px;
+        }
+
+        .destaque-diferenca p {
+            color: #666666;
+            font-size: 11pt;
+            margin: 5px 0;
+        }
+
+        .destaque-diferenca strong {
+            color: #e65100;
+            font-size: 12pt;
+        }
+
+        .observacoes {
+            background-color: #fff9e6;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .observacoes h3 {
+            color: #f57c00;
+            font-size: 12pt;
+            margin-bottom: 10px;
+        }
+
+        .observacoes ul {
+            margin-left: 20px;
+            color: #666666;
+        }
+
+        .observacoes li {
+            margin-bottom: 5px;
+            font-size: 10pt;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 3px solid #4caf50;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #666666;
+            font-size: 10pt;
+            margin: 5px 0;
+        }
+
+        .footer .signature {
+            color: #0066cc;
+            font-weight: bold;
+            font-size: 12pt;
+            margin-top: 10px;
+        }
+
+        .footer .contato {
+            font-size: 9pt;
+            color: #999999;
+            margin-top: 10px;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
     </style>
 </head>
 <body>
-<h1 style="color: #0066cc;">Seu Resultado de Simulação</h1>
+<div class="container">
+    <!-- Cabeçalho -->
+    <div class="header">
+        <h1>RELATÓRIO COMPARATIVO DE SIMULAÇÃO</h1>
+        <p>Análise SAC vs PRICE - AGIMOB</p>
+    </div>
 
-<p>Obrigado por simular com o AGIMOB! Sua simulação do tipo <b><span th:text="${tipoSimulacao}"></span></b> foi concluída.</p>
+    <!-- Informações Gerais -->
+    <div class="info-section">
+        <p><span class="info-label">Tipo de Simulação:</span> <span class="tipo-simulacao">COMPARATIVA (SAC e PRICE)</span></p>
+        <p><span class="info-label">Data da Simulação:</span> <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">13/10/2025 10:30</span></p>
+    </div>
 
-<h2>Detalhes da simulação - Modalidade SAC</h2>
-<table class="parcela-table">
-    <thead>
-    <tr>
-        <th>Nº</th>
-        <th>Valor Total</th>
-        <th>Juros</th>
-        <th>Amortização</th>
-        <th>Saldo devedor</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="parcela : ${listaParcelasSac}">
-        <td th:text="${parcela.numeroParcela}">1</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">1000.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">250.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">750.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.getSaldoDevedor(), 0, 'COMMA', 2, 'POINT')}">750.00</td>
-    </tr>
-    </tbody>
-</table>
-<h2>Detalhes da simulação - Modalidade PRICE</h2>
-<table class="parcela-table">
-    <thead>
-    <tr>
-        <th>Nº</th>
-        <th>Valor Total</th>
-        <th>Juros</th>
-        <th>Amortização</th>
-        <th>Saldo devedor</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="parcela : ${listaParcelasPrice}">
-        <td th:text="${parcela.numeroParcela}">1</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">1000.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">250.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">750.00</td>
-        <td th:text="'R$ ' + ${#numbers.formatDecimal(parcela.getSaldoDevedor(), 0, 'COMMA', 2, 'POINT')}">750.00</td>
-    </tr>
-    </tbody>
-</table>
-<p>Atenciosamente, <br/>Equipe Agimob.</p>
+    <!-- Box Explicativo -->
+    <div class="comparacao-box">
+        <h3>Comparação entre Modalidades</h3>
+        <p><strong>SAC (Sistema de Amortização Constante):</strong> Parcelas decrescentes, amortização fixa</p>
+        <p><strong>PRICE (Tabela Price):</strong> Parcelas fixas, amortização crescente</p>
+    </div>
+
+    <!-- ========== SISTEMA SAC ========== -->
+    <h2 class="section-title">Sistema SAC - Amortização Constante</h2>
+
+    <div class="subsection-title">Detalhamento das Parcelas - SAC</div>
+
+    <table class="parcela-table sac-table">
+        <thead>
+        <tr>
+            <th style="width: 8%;">Nº</th>
+            <th style="width: 23%;">Valor Total</th>
+            <th style="width: 23%;">Juros</th>
+            <th style="width: 23%;">Amortização</th>
+            <th style="width: 23%;">Saldo Devedor</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="parcela : ${listaParcelasSac}">
+            <td class="numero" th:text="${parcela.numeroParcela}">1</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.000,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">R$ 250,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">R$ 750,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.saldoDevedor, 0, 'COMMA', 2, 'POINT')}">R$ 9.250,00</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- ========== TABELA PRICE ========== -->
+    <div class="page-break"></div>
+
+    <h2 class="section-title">Tabela PRICE - Parcelas Fixas</h2>
+
+    <div class="subsection-title">Detalhamento das Parcelas - PRICE</div>
+
+    <table class="parcela-table price-table">
+        <thead>
+        <tr>
+            <th style="width: 8%;">Nº</th>
+            <th style="width: 23%;">Valor Total</th>
+            <th style="width: 23%;">Juros</th>
+            <th style="width: 23%;">Amortização</th>
+            <th style="width: 23%;">Saldo Devedor</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="parcela : ${listaParcelasPrice}">
+            <td class="numero" th:text="${parcela.numeroParcela}">1</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorTotalParcela, 0, 'COMMA', 2, 'POINT')}">R$ 1.000,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.valorJurosParcela, 0, 'COMMA', 2, 'POINT')}">R$ 250,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.amortizacao, 0, 'COMMA', 2, 'POINT')}">R$ 750,00</td>
+            <td class="valor" th:text="'R$ ' + ${#numbers.formatDecimal(parcela.saldoDevedor, 0, 'COMMA', 2, 'POINT')}">R$ 9.250,00</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Box de Análise Comparativa -->
+    <div class="destaque-diferenca">
+        <h3>Análise Comparativa</h3>
+        <p><strong>SAC:</strong> Primeira parcela mais alta, mas redução gradual ao longo do tempo</p>
+        <p><strong>PRICE:</strong> Parcelas fixas durante todo o período de financiamento</p>
+        <p style="margin-top: 10px;"><strong>Escolha conforme seu perfil:</strong> SAC para quem pode pagar mais no início ou PRICE para previsibilidade</p>
+    </div>
+
+    <!-- Observações -->
+    <div class="observacoes">
+        <h3>Observações Importantes</h3>
+        <ul>
+            <li>Os valores apresentados são uma simulação e podem sofrer alterações na contratação.</li>
+            <li>Esta simulação não constitui proposta de crédito ou contrato de financiamento.</li>
+            <li>Para efetivar o financiamento, é necessário análise de crédito e apresentação de documentação.</li>
+            <li>A escolha entre SAC e PRICE deve considerar seu planejamento financeiro pessoal.</li>
+            <li>Consulte as condições específicas e taxas vigentes no momento da contratação.</li>
+        </ul>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="footer">
+        <p>Este documento foi gerado automaticamente pelo sistema AGIMOB</p>
+        <p class="signature">Equipe AGIMOB</p>
+        <p class="contato">www.agimob.com.br | contato@agimob.com.br</p>
+    </div>
+</div>
 </body>
 </html>

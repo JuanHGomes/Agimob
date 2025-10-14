@@ -1,5 +1,6 @@
 package com.example.agimob_v1.services;
 
+import com.example.agimob_v1.dto.InformacoesAdicionaisDto;
 import com.example.agimob_v1.dto.ParcelaDto;
 import com.example.agimob_v1.dto.SimulacaoRequestDto;
 import com.example.agimob_v1.model.Simulacao;
@@ -60,44 +61,57 @@ public class EmailService {
         if(modalidade.equalsIgnoreCase("SAC")){
             List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getSac().parcelas();
 
-            return gerarHtmlSacOuPrice(simulacao.getTipo_modalidade(), parcelasSac);
+            return gerarHtmlSacOuPrice(simulacao, parcelasSac);
         }
         else if(modalidade.equalsIgnoreCase("PRICE")){
             List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getPrice().parcelas();
 
-            return gerarHtmlSacOuPrice(simulacao.getTipo_modalidade(), parcelasPrice);
+            return gerarHtmlSacOuPrice(simulacao, parcelasPrice);
         }
         List<ParcelaDto> parcelasSac = calculadoraSimulacao.calcularParcelas(simulacao).getSac().parcelas();
         List<ParcelaDto> parcelasPrice = calculadoraSimulacao.calcularParcelas(simulacao).getPrice().parcelas();
 
-        return gerarHtmlSacEPrice(modalidade, parcelasSac, parcelasPrice);
+        return gerarHtmlSacEPrice(simulacao, parcelasSac, parcelasPrice);
 
     }
 
 
-    private String gerarHtmlSacOuPrice(String modalidade, List<ParcelaDto> parcelas) {
+    private String gerarHtmlSacOuPrice(Simulacao simulacao, List<ParcelaDto> parcelas) {
 
         List<ParcelaDto> dezPrimeirasParcelas = parcelas.stream().limit(10).toList();
 
         Context context = new Context();
         context.setVariable("assunto", "Relatório de Simulacão");
-        context.setVariable("tipoSimulacao", modalidade.toUpperCase());
+        context.setVariable("tipoSimulacao", simulacao.getTipo_modalidade().toUpperCase());
         context.setVariable("listaParcelas", dezPrimeirasParcelas);
+
+        if(simulacao.getTipoUsuario().equalsIgnoreCase("CLIENTE")){
+            InformacoesAdicionaisDto infosClienteAgi = calculadoraSimulacao.calcularInformacoesClienteAgi(simulacao, simulacao.getTipo_modalidade());
+
+            context.setVariable("dadosClienteAgi", infosClienteAgi);
+        }
 
         return templateEngine.process("relatorio-simulacao-email", context);
     }
 
-    private String gerarHtmlSacEPrice(String
-                                              modalidade, List<ParcelaDto> parcelasSac, List<ParcelaDto> parcelasPrice) {
+    private String gerarHtmlSacEPrice(Simulacao simulacao, List<ParcelaDto> parcelasSac, List<ParcelaDto> parcelasPrice) {
 
         List<ParcelaDto> dezPrimeirasParcelasSac = parcelasSac.stream().limit(10).toList();
         List<ParcelaDto> dezPrimeirasParcelasPrice = parcelasPrice.stream().limit(10).toList();
 
         Context context = new Context();
         context.setVariable("assunto", "Relatório de Simulacão");
-        context.setVariable("tipoSimulacao", modalidade.toUpperCase());
+        context.setVariable("tipoSimulacao", simulacao.getTipo_modalidade().toUpperCase());
         context.setVariable("listaParcelasSac", dezPrimeirasParcelasSac);
         context.setVariable("listaParcelasPrice", dezPrimeirasParcelasPrice);
+
+        if (simulacao.getTipoUsuario().equalsIgnoreCase("CLIENTE")){
+            InformacoesAdicionaisDto infosAdicionaisClienteAgiSac = calculadoraSimulacao.calcularInformacoesClienteAgi(simulacao, "SAC");
+            InformacoesAdicionaisDto infosAdicionaisClienteAgiPrice = calculadoraSimulacao.calcularInformacoesClienteAgi(simulacao, "PRICE");
+
+            context.setVariable("dadosClienteAgiSac", infosAdicionaisClienteAgiSac);
+            context.setVariable("dadosClienteAgiPrice", infosAdicionaisClienteAgiPrice);
+        }
 
         return templateEngine.process("relatorio-simulacao-email-ambos", context);
     }
